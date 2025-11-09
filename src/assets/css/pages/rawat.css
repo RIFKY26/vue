@@ -1,6 +1,6 @@
-/* ========================================= */
-/* == STYLE UNTUK HALAMAN RAWAT KUCING == */
-/* ========================================= */
+/* ================================== */
+/* == PAGES - RAWAT KUCING           == */
+/* ================================== */
 
 /* === LAYOUT UTAMA === */
 .care-dashboard-grid {
@@ -10,9 +10,7 @@
   align-items: start;
 }
 
-/* ========================================= */
-/* == KARTU IDENTITAS KUCING == */
-/* ========================================= */
+/* === KARTU IDENTITAS KUCING === */
 .cat-identity-card {
   background-color: var(--yellow-color);
   border-radius: 12px;
@@ -20,7 +18,7 @@
   color: var(--text-dark);
   position: relative;
   overflow: hidden;
-  background-image: url("../image/rawat-kucing/Group9791.svg");
+  background-image: url('../../image/rawat-kucing/Group9791.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -77,13 +75,12 @@
   font-weight: 500;
   padding: 4px 10px;
   border-radius: 15px;
-  white-space: nowrap; /* biar teks di dalamnya gak pecah ke baris baru */
+  white-space: nowrap;
 }
 
 .cat-info i {
   font-size: 12px;
 }
-
 
 .cat-identity-card img {
   height: 100px;
@@ -108,9 +105,7 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* ========================================= */
-/* == KARTU PENGINGAT (REMINDER) == */
-/* ========================================= */
+/* === KARTU PENGINGAT (REMINDER) === */
 .reminder-card {
   background-color: var(--white);
   border: 1px solid var(--border-color);
@@ -178,54 +173,7 @@
   color: var(--secondary-color);
 }
 
-/* ========================================= */
-/* == TOGGLE SWITCH == */
-/* ========================================= */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 28px;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: var(--secondary-color);
-}
-
-input:checked + .slider::before {
-  transform: translateX(22px);
-}
-
-/* ========================================= */
-/* == KARTU AKTIVITAS == */
-/* ========================================= */
+/* === KARTU AKTIVITAS === */
 .activity-card {
   background-color: var(--white);
   border: 1px solid var(--border-color);
@@ -243,22 +191,6 @@ input:checked + .slider::before {
 .activity-card .card-header h3 {
   font-size: 18px;
   font-weight: 600;
-}
-
-.btn-icon {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.btn-icon:hover {
-  opacity: 0.9;
 }
 
 .date-label {
@@ -349,58 +281,7 @@ input:checked + .slider::before {
   color: var(--secondary-color);
 }
 
-/* ========================================= */
-/* == MODAL / POPUP FORM == */
-/* ========================================= */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: var(--white);
-  padding: 25px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
-  margin-bottom: 15px;
-}
-
-.modal-header h3 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: var(--text-light);
-}
-
-/* ========================================= */
-/* == RESPONSIVE DESIGN == */
-/* ========================================= */
-
-/* Tablet (max-width: 992px) */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 992px) {
   .care-dashboard-grid {
     grid-template-columns: 1fr;
@@ -426,7 +307,6 @@ input:checked + .slider::before {
   }
 }
 
-/* Mobile (max-width: 600px) */
 @media (max-width: 600px) {
   .cat-identity-card {
     padding: 18px;
@@ -459,12 +339,5 @@ input:checked + .slider::before {
     align-self: flex-end;
     margin-top: 4px;
   }
-
-  .form-actions {
-    text-align: center;
-  }
-
-  .form-actions .btn-submit {
-    width: 100%;
-  }
 }
+

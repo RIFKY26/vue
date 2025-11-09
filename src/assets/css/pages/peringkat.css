@@ -1,0 +1,319 @@
+/* ================================== */
+/* == PAGES - PERINGKAT              == */
+/* ================================== */
+
+/* === LEADERBOARD TOP 3 === */
+.leaderboard-top3 {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  align-items: end;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+.top-user-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.top-user-card.main {
+  transform: translateY(-20px) scale(1.05);
+  border-color: var(--secondary-color);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  z-index: 1;
+  position: relative;
+}
+
+.top-user-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px auto;
+  border: 3px solid var(--border-color);
+}
+
+.top-user-card.main img {
+  border-color: var(--secondary-color);
+}
+
+.top-user-card .stars {
+  color: #ffc107;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.top-user-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.top-user-card p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 5px;
+}
+
+.top-user-card .total-points {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin: 5px 0 15px 0;
+}
+
+.point-details {
+  display: flex;
+  justify-content: space-around;
+  font-size: 13px;
+  color: var(--text-light);
+  border-top: 1px solid var(--border-color);
+  padding-top: 15px;
+}
+
+.point-details span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.point-details .points {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.point-details span:nth-child(1) .points {
+  color: #22C55E;
+}
+
+.point-details span:nth-child(2) .points {
+  color: #3B82F6;
+}
+
+.point-details span:nth-child(3) .points {
+  color: #EF4444;
+}
+
+/* === RANK BADGE === */
+.rank-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+}
+
+.rank-badge.gold { 
+  background-color: #ffc107; 
+}
+
+.rank-badge.silver { 
+  background-color: #c0c0c0; 
+}
+
+.rank-badge.bronze { 
+  background-color: #cd7f32; 
+}
+
+/* === LEADERBOARD TABLE === */
+.leaderboard-table-wrapper {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 25px;
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0 auto;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.leaderboard-table th {
+  font-size: 13px;
+  color: var(--white);
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: var(--secondary-color);
+  text-align: left;
+}
+
+.leaderboard-table th:nth-child(1) {
+  text-align: center;
+  width: 8%;
+  padding: 15px 10px;
+}
+
+.leaderboard-table th:nth-child(2) {
+  text-align: left;
+  width: 25%;
+  padding: 15px 15px 15px 20px;
+}
+
+.leaderboard-table th:nth-child(3),
+.leaderboard-table th:nth-child(4),
+.leaderboard-table th:nth-child(5) {
+  text-align: right;
+  width: 12%;
+  padding: 15px 20px 15px 15px;
+}
+
+.leaderboard-table th:nth-child(6) {
+  text-align: right;
+  width: 13%;
+  padding: 15px 20px 15px 15px;
+}
+
+.leaderboard-table th:nth-child(7) {
+  text-align: center;
+  width: 10%;
+  padding: 15px 10px;
+}
+
+.leaderboard-table thead {
+  background-color: var(--secondary-color);
+}
+
+.leaderboard-table td {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  background-color: var(--white);
+}
+
+.leaderboard-table td:nth-child(1) {
+  text-align: center;
+  font-weight: 600;
+  padding: 15px 10px;
+}
+
+.leaderboard-table td:nth-child(2) {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 15px 15px 20px;
+}
+
+.leaderboard-table td:nth-child(2) span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leaderboard-table td:nth-child(3),
+.leaderboard-table td:nth-child(4),
+.leaderboard-table td:nth-child(5),
+.leaderboard-table td:nth-child(6) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding: 15px 20px 15px 15px;
+}
+
+.leaderboard-table td:nth-child(7) {
+  text-align: center;
+  padding: 15px 10px;
+}
+
+.leaderboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table td:nth-child(2) img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--border-color);
+  display: block;
+}
+
+.leaderboard-table td.total strong {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+/* === MODAL RIWAYAT POIN === */
+.tindakan-btn {
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item .icon {
+  font-size: 18px;
+  color: var(--white);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-item .icon.adopsi { 
+  background-color: #3B82F6; 
+}
+
+.history-item .icon.donasi { 
+  background-color: #FDBA2B; 
+}
+
+.history-item .icon.lapor { 
+  background-color: #10B981; 
+}
+
+.history-info {
+  flex-grow: 1;
+  font-size: 14px;
+}
+
+.history-info strong {
+  font-weight: 600;
+}
+
+.history-points {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+

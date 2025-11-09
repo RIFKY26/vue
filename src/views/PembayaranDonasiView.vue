@@ -1,10 +1,10 @@
 <template>
-  <main>
-    <div class="main-header">
-      <h1>Pembayaran Donasi</h1>
-      <span class="breadcrumb">DONASI / PEMBAYARAN</span>
-    </div>
-
+    <main>
+      <div class="main-header">
+        <h1>Pembayaran Donasi</h1>
+        <span class="breadcrumb">DONASI / PEMBAYARAN</span>
+      </div>
+  
     <div class="payment-container">
       <!-- Left Column: Campaign Info & Form -->
       <div class="payment-left">
@@ -52,7 +52,7 @@
           </div>
           <div v-if="errors.name" class="error-message">{{ errors.name }}</div>
         </div>
-
+  
         <!-- Donation Amount -->
         <div class="payment-section">
           <div class="section-header">
@@ -91,12 +91,12 @@
             Minimum donasi: Rp 10.000
           </div>
         </div>
-
+  
         <!-- Payment Method -->
         <div class="payment-section">
           <div class="section-header">
             <i class="fa-solid fa-credit-card"></i>
-            <h4>Metode Pembayaran</h4>
+          <h4>Metode Pembayaran</h4>
           </div>
           
           <div class="payment-methods">
@@ -193,23 +193,23 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
-  </main>
-</template>
-
-<script setup>
+    </main>
+  </template>
+  
+  <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
+  
 const route = useRoute()
 const router = useRouter()
 const campaignId = route.params.id
 
 // Donor data
-const donor = ref({
-  name: '',
-  amount: null
+  const donor = ref({
+    name: '',
+    amount: null
 })
 
 // Form validation
@@ -372,9 +372,9 @@ function processPayment() {
     router.push('/donasi')
   }, 2000)
 }
-</script>
-
-<style scoped>
-@import '@/assets/donasi.css';
+  </script>
+  
+  <style scoped>
+    @import '@/assets/css/pages/donasi.css';
 @import '@/assets/pembayaran-donasi.css';
-</style>
+  </style>

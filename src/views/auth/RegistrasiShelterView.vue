@@ -131,8 +131,11 @@ function handleRegister() {
   isLoading.value = true
   setTimeout(() => {
     isLoading.value = false
+    // Simpan status autentikasi setelah registrasi
+    localStorage.setItem('isAuthenticated', 'true')
+    localStorage.setItem('userEmail', formData.value.email)
     alert('Registrasi berhasil!')
-    router.push('/')
+    router.push('/app/home')
   }, 1000)
 }
 </script>

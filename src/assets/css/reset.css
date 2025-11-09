@@ -1,0 +1,44 @@
+/* ================================== */
+/* == CSS RESET                      == */
+/* ================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+/* Exception untuk elemen yang memang perlu lebih besar */
+img, video, iframe, canvas, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Terapkan Flexbox ke #app, bukan body */
+#app {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    display: flex;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body {
+    background-color: var(--bg-main);
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+

@@ -1,13 +1,20 @@
 .login-container {
     display: flex;
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
     min-height: 100vh;
     background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .left-panel {
     flex: 1;
     min-width: 50%;
+    max-width: 50%;
+    width: 50%;
     background: linear-gradient(135deg, #FFC700, #FFAA40);
     position: relative;
     display: flex;
@@ -16,6 +23,7 @@
     justify-content: center;
     overflow: hidden;
     padding: 40px 20px;
+    box-sizing: border-box;
 }
 
 .left-panel::before {
@@ -58,11 +66,15 @@
 .right-panel {
     flex: 1;
     min-width: 50%;
+    max-width: 50%;
+    width: 50%;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 40px 20px;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .login-form-wrapper {

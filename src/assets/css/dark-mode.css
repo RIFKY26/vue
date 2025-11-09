@@ -1,0 +1,188 @@
+/* ================================== */
+/* == DARK MODE STYLES              == */
+/* ================================== */
+
+.dark-mode {
+    --primary-color: #4CAF50;
+    --secondary-color: #60A5FA;
+    --yellow-color: #FBBF24;
+    --blue-dark: #60A5FA;
+    --blue-light: #1E3A8A;
+    --text-dark: #F3F4F6;
+    --text-light: #9CA3AF;
+    --bg-light: #1F2937;
+    --bg-main: #111827;
+    --white: #1F2937;
+    --border-color: #374151;
+    --shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+}
+
+.dark-mode .sidebar {
+    background-color: #1F2937;
+    border-right-color: var(--border-color);
+}
+
+.dark-mode .header {
+    background-color: #1F2937;
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .main-content-wrapper {
+    background-color: var(--bg-main);
+}
+
+.dark-mode main {
+    background-color: var(--bg-main);
+}
+
+.dark-mode .cat-card,
+.dark-mode .donation-card,
+.dark-mode .reminder-card,
+.dark-mode .activity-card,
+.dark-mode .payment-section,
+.dark-mode .donation-detail-card,
+.dark-mode .donor-list,
+.dark-mode .leaderboard-table-wrapper,
+.dark-mode .top-user-card {
+    background-color: #1F2937;
+    border-color: var(--border-color);
+}
+
+.dark-mode .bell-dropdown {
+    background-color: #1F2937;
+    border-color: var(--border-color);
+}
+
+.dark-mode .bell-dropdown-header {
+    background-color: #1E3A8A;
+}
+
+.dark-mode .reminder-notification-item {
+    background-color: #111827;
+    border-color: var(--border-color);
+}
+
+.dark-mode .reminder-notification-item:hover {
+    background-color: #1E3A8A;
+}
+
+.dark-mode .leaderboard-table th {
+    background-color: var(--secondary-color);
+}
+
+.dark-mode .leaderboard-table td {
+    background-color: #1F2937;
+}
+
+.dark-mode .donor-item {
+    background-color: #111827;
+    border-color: var(--border-color);
+}
+
+.dark-mode .cat-identity-card {
+    background-color: var(--yellow-color);
+    color: var(--text-dark);
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+    background-color: #111827;
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+.dark-mode .search-bar input,
+.dark-mode .donation-search-bar input {
+    background-color: #111827;
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+.dark-mode .filter-panel {
+    background-color: #1F2937;
+    border-color: var(--border-color);
+}
+
+.dark-mode .modal-content {
+    background-color: #1F2937;
+    border-color: var(--border-color);
+}
+
+.dark-mode .modal-header {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group select {
+    background-color: #111827;
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+.dark-mode .input-group {
+    background-color: #111827;
+    border-color: var(--border-color);
+}
+
+.dark-mode .input-group input {
+    background-color: transparent;
+    color: var(--text-dark);
+}
+
+.dark-mode .payment-method-option {
+    background-color: #111827;
+    border-color: var(--border-color);
+}
+
+/* Scrollbar untuk dark mode */
+.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #4B5563;
+}
+
+/* Dark mode untuk shelter */
+.dark-mode .stat-card,
+.dark-mode .list-card,
+.dark-mode .adopsi-card,
+.dark-mode .donasi-card,
+.dark-mode .management-table {
+    background-color: #1F2937;
+    border-color: var(--border-color);
+}
+
+.dark-mode .management-table thead {
+    background-color: #111827;
+}
+
+.dark-mode .management-table tbody tr:hover {
+    background-color: #111827;
+}
+
+.dark-mode .btn-secondary {
+    background-color: #374151;
+    color: var(--text-dark);
+}
+
+.dark-mode .btn-secondary:hover {
+    background-color: #4B5563;
+}
+

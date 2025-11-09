@@ -101,8 +101,11 @@ function handleLogin() {
   // Simulasi proses login
   setTimeout(() => {
     isLoading.value = false
-    // Redirect ke beranda setelah login berhasil
-    router.push('/')
+    // Simpan status autentikasi
+    localStorage.setItem('isAuthenticated', 'true')
+    localStorage.setItem('userEmail', formData.value.email)
+    // Redirect ke dashboard setelah login berhasil
+    router.push('/app/home')
   }, 1000)
 }
 </script>

@@ -1,0 +1,192 @@
+/* ================================== */
+/* == NOTIFICATION COMPONENTS       == */
+/* ================================== */
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #EF4444;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    border: 2px solid var(--white);
+}
+
+.bell-container {
+    position: relative;
+}
+
+.bell-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 350px;
+    max-width: calc(100vw - 40px);
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bell-dropdown-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--blue-light);
+}
+
+.bell-dropdown-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 5px 0;
+}
+
+.notification-count-text {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.bell-dropdown-body {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.reminder-notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: var(--bg-light);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.reminder-notification-item:hover {
+    background-color: var(--blue-light);
+    transform: translateX(2px);
+}
+
+.reminder-notification-item:last-child {
+    margin-bottom: 0;
+}
+
+.reminder-notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--yellow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-dark);
+    font-size: 18px;
+}
+
+.reminder-notification-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.reminder-notification-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.reminder-notification-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.reminder-notification-details .cat-name {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.reminder-notification-details .reminder-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.reminder-notification-details .reminder-time i {
+    font-size: 10px;
+}
+
+.reminder-notification-details .reminder-frequency {
+    background-color: var(--bg-light);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.no-reminders {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+}
+
+.no-reminders i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.no-reminders p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.bell-dropdown-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-light);
+    text-align: center;
+}
+
+.bell-dropdown-footer a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.bell-dropdown-footer a:hover {
+    color: var(--blue-dark);
+    text-decoration: underline;
+}
+

@@ -1,0 +1,86 @@
+/* ================================== */
+/* == MAIN CONTENT LAYOUT            == */
+/* ================================== */
+
+.main-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease-in-out;
+    margin-left: 240px;
+    background-color: var(--bg-main);
+    width: calc(100vw - 240px);
+    max-width: calc(100vw - 240px);
+    box-sizing: border-box;
+    position: relative;
+}
+
+.main-content-wrapper.full-width {
+    margin-left: 0;
+    width: 100vw;
+    max-width: 100vw;
+}
+
+/* Konten Utama (Berlaku untuk semua halaman) */
+main {
+    padding: 30px;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin: 20px;
+    width: calc(100% - 40px);
+    max-width: calc(100% - 40px);
+    box-sizing: border-box;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+/* Pastikan container utama di dalam main menggunakan full width */
+main > * {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* Exception untuk elemen yang memang perlu lebih kecil */
+main > .main-header {
+    width: auto !important;
+    max-width: 100% !important;
+}
+
+/* Pastikan semua grid dan container menggunakan full width */
+main > .profile-container,
+main > .donation-grid,
+main > .report-grid,
+main > .leaderboard-top3,
+main > .leaderboard-table-wrapper,
+main > .adopsi-grid,
+main > .donation-search-bar,
+main > .lapor-controls {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.main-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.main-header .breadcrumb {
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 400;
+}
+

@@ -31,8 +31,8 @@
           </h4>
         </div>
         <div class="filter-content">
-          <div class="filter-options">
-            <div class="filter-group">
+        <div class="filter-options">
+          <div class="filter-group">
               <label class="filter-group-title">
                 <i class="fa-solid fa-venus-mars"></i>
                 Jenis Kelamin
@@ -46,7 +46,7 @@
                     @change="applyFilters"
                   />
                   <span>Betina</span>
-                </label>
+            </label>
                 <label class="filter-checkbox-item">
                   <input 
                     type="checkbox" 
@@ -55,11 +55,11 @@
                     @change="applyFilters"
                   />
                   <span>Jantan</span>
-                </label>
+            </label>
               </div>
-            </div>
+          </div>
 
-            <div class="filter-group">
+          <div class="filter-group">
               <label class="filter-group-title">
                 <i class="fa-solid fa-cat"></i>
                 Ras Kucing
@@ -73,7 +73,7 @@
                     @change="applyFilters"
                   />
                   <span>Persia</span>
-                </label>
+            </label>
                 <label class="filter-checkbox-item">
                   <input 
                     type="checkbox" 
@@ -82,7 +82,7 @@
                     @change="applyFilters"
                   />
                   <span>British</span>
-                </label>
+            </label>
                 <label class="filter-checkbox-item">
                   <input 
                     type="checkbox" 
@@ -91,7 +91,7 @@
                     @change="applyFilters"
                   />
                   <span>Domestik</span>
-                </label>
+            </label>
               </div>
             </div>
           </div>
@@ -240,5 +240,5 @@ function clearFilters() {
 </script>
 
 <style scoped>
-@import '@/assets/adopsi.css';
+@import '@/assets/css/pages/adopsi.css';
 </style>

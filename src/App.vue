@@ -2,7 +2,7 @@
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import ChatSidebar from './components/ChatSidebar.vue'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -30,6 +30,7 @@ const notificationCount = computed(() => {
 })
 
 const isAuthLayout = computed(() => route.meta.layout === 'auth')
+const isLandingLayout = computed(() => route.meta.layout === 'landing')
 
 // 3. Buat fungsi untuk tombol burger
 function toggleSidebar() {
@@ -96,7 +97,35 @@ onMounted(() => {
   
   // Tambahkan event listener untuk menutup dropdown
   document.addEventListener('click', handleClickOutside)
+  
+  // Update class untuk landing page
+  updateLayoutClass()
 })
+
+// Watch route untuk update layout class
+watch(() => route.meta.layout, () => {
+  updateLayoutClass()
+})
+
+// Fungsi untuk update class pada body dan #app
+function updateLayoutClass() {
+  const appElement = document.getElementById('app')
+  if (isLandingLayout.value) {
+    document.body.classList.add('landing-page-active')
+    if (appElement) {
+      appElement.classList.add('landing-layout-active')
+      appElement.style.display = 'block'
+      appElement.style.width = '100%'
+    }
+  } else {
+    document.body.classList.remove('landing-page-active')
+    if (appElement) {
+      appElement.classList.remove('landing-layout-active')
+      appElement.style.display = ''
+      appElement.style.width = ''
+    }
+  }
+}
 
 // Cleanup event listener
 onUnmounted(() => {
@@ -105,7 +134,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <RouterView v-if="isAuthLayout" />
+  <div :class="{ 'landing-layout': isLandingLayout, 'landing-layout-wrapper': isLandingLayout }">
+    <!-- Landing Page - No sidebar, no header -->
+    <RouterView v-if="isLandingLayout || isAuthLayout" />
+    <!-- App Layout - With sidebar and header -->
   <template v-else>
     <Sidebar :isOpen="isSidebarOpen" @openChat="openChatSidebar" />
 
@@ -190,8 +222,17 @@ onUnmounted(() => {
     <!-- Chat Sidebar -->
     <ChatSidebar :isOpen="isChatSidebarOpen" @close="closeChatSidebar" />
   </template>
+  </div>
 </template>
 
 <style scoped>
 /* Kosongkan, kita pakai main.css */
+</style>
+
+<style>
+/* Override untuk landing page layout */
+.landing-layout {
+  width: 100% !important;
+  display: block !important;
+}
 </style>

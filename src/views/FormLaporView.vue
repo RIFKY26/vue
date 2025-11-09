@@ -21,11 +21,11 @@
             @drop.prevent="handleDrop"
           >
             <div v-if="!selectedImage" class="upload-content">
-              <div class="upload-icon">
-                <i class="fa-solid fa-image"></i>
-              </div>
+            <div class="upload-icon">
+              <i class="fa-solid fa-image"></i>
+            </div>
               <button type="button" class="btn btn-warning">Pilih Gambar atau Taruh di Sini</button>
-              <p>Atau</p>
+            <p>Atau</p>
               <button type="button" class="btn btn-secondary" @click.stop="takePhoto">Ambil Foto</button>
             </div>
             
@@ -211,9 +211,10 @@ function submitForm() {
 /* Form Grid */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 30px;
+  grid-template-columns: 350px 1fr;
+  gap: 25px;
   margin-top: 20px;
+  align-items: start;
 }
 
 /* Form Section */
@@ -242,13 +243,13 @@ function submitForm() {
 .upload-zone {
   border: 2px dashed var(--border-color);
   border-radius: 12px;
-  padding: 40px 20px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 350px;
+  min-height: 280px;
   background-color: var(--bg-light);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -283,21 +284,23 @@ function submitForm() {
 }
 
 .upload-icon {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--yellow-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 24px;
   color: var(--text-dark);
   margin-bottom: 10px;
 }
 
 .upload-zone .btn {
   pointer-events: none;
-  min-width: 200px;
+  min-width: 180px;
+  padding: 10px 15px;
+  font-size: 13px;
 }
 
 .upload-zone p {
@@ -312,7 +315,7 @@ function submitForm() {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 350px;
+  min-height: 280px;
 }
 
 .preview-image {
@@ -351,29 +354,29 @@ function submitForm() {
 .info-box {
   background-color: var(--white);
   border-radius: 12px;
-  padding: 30px;
+  padding: 25px;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow);
 }
 
 .info-box h2 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-dark);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 3px solid var(--secondary-color);
   display: inline-block;
 }
 
 .info-box h3 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 /* Input Group */
@@ -382,11 +385,11 @@ function submitForm() {
   align-items: stretch;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   overflow: hidden;
   background-color: var(--white);
   transition: all 0.2s ease;
-  min-height: 50px;
+  min-height: 48px;
 }
 
 .input-group:focus-within {
@@ -398,13 +401,13 @@ function submitForm() {
   padding: 0;
   background-color: var(--bg-light);
   border-right: 1px solid var(--border-color);
-  font-size: 18px;
-  color: #433D3E;
+  font-size: 16px;
+  color: var(--secondary-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
-  width: 60px;
+  min-width: 50px;
+  width: 50px;
   flex-shrink: 0;
   height: auto;
   align-self: stretch;
@@ -415,13 +418,13 @@ function submitForm() {
 .input-group textarea {
   border: none;
   flex-grow: 1;
-  padding: 14px 18px;
+  padding: 12px 15px;
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   color: var(--text-dark);
   background: transparent;
   width: 100%;
-  min-height: 50px;
+  min-height: 48px;
   line-height: 1.5;
 }
 
@@ -432,9 +435,10 @@ function submitForm() {
 }
 
 .input-group textarea {
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   line-height: 1.6;
+  min-height: 90px;
 }
 
 .input-group input::placeholder,
@@ -447,8 +451,8 @@ function submitForm() {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23878C92' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 18px center;
-  padding-right: 40px;
+  background-position: right 15px center;
+  padding-right: 35px;
 }
 
 .input-group select:invalid {
@@ -465,35 +469,35 @@ function submitForm() {
 
 .textarea-group .icon {
   align-items: flex-start;
-  padding-top: 18px;
+  padding-top: 15px;
   height: auto;
 }
 
 .textarea-group textarea {
   resize: vertical;
-  min-height: 100px;
-  padding-top: 14px;
-  padding-bottom: 14px;
-  align-items: flex-start;
+  min-height: 90px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 /* Submit Button */
 .btn-submit {
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   background-color: var(--yellow-color);
   color: var(--text-dark);
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 5px;
   transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
 }
 
 .btn-submit:hover {
@@ -514,7 +518,7 @@ function submitForm() {
   }
 
   .upload-zone {
-    min-height: 300px;
+    min-height: 250px;
   }
 }
 
@@ -523,8 +527,12 @@ function submitForm() {
     padding: 20px;
   }
 
+  .info-box h2 {
+    font-size: 16px;
+  }
+
   .info-box h3 {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .upload-box {
@@ -532,14 +540,14 @@ function submitForm() {
   }
 
   .upload-zone {
-    min-height: 250px;
-    padding: 30px 15px;
+    min-height: 220px;
+    padding: 25px 15px;
   }
 
   .upload-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
   }
 
   .input-group {
@@ -549,7 +557,8 @@ function submitForm() {
   .input-group .icon {
     border-right: 1px solid var(--border-color);
     border-bottom: none;
-    min-width: 50px;
+    min-width: 45px;
+    width: 45px;
   }
 }
 
@@ -558,7 +567,7 @@ function submitForm() {
     min-width: auto;
     width: 100%;
     padding: 10px;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .input-group {
@@ -571,7 +580,8 @@ function submitForm() {
     border-bottom: 1px solid var(--border-color);
     width: 100%;
     justify-content: center;
-    padding: 12px;
+    padding: 10px;
+    min-width: 100%;
   }
 
   .input-group input,

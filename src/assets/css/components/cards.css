@@ -1,0 +1,829 @@
+/* ================================== */
+/* == CARDS COMPONENTS              == */
+/* ================================== */
+
+/* Grid untuk Kartu Kucing */
+.cat-adoption-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.cat-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cat-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.cat-card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.cat-card-body h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.cat-info-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.cat-info-tags .tag {
+    background-color: var(--blue-light);
+    color: var(--secondary-color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 15px;
+}
+
+.shelter-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-light);
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.shelter-info img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.cat-card-body p {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+/* Donation Cards */
+.donation-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 100%;
+}
+
+.donation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.donation-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.donation-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 12px;
+}
+
+.donation-card-body h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.donation-card-body .shelter-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-dark);
+    font-size: 14px;
+    margin: 0;
+}
+
+.donation-card-body .shelter-info img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.donation-card-body .shelter-info span {
+    line-height: 1.4;
+}
+
+.donation-card-body .shelter-info b {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.donation-card-body p {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Donation Detail Card */
+.donation-detail-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.donation-detail-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.donation-detail-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.donation-detail-body h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.donation-detail-body .shelter-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-dark);
+    font-size: 15px;
+    margin: 0;
+}
+
+.donation-detail-body .shelter-info img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.donation-detail-body .shelter-info b {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.donation-detail-body p {
+    font-size: 15px;
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Donor List */
+.donor-list {
+    background-color: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.donor-list h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 25px 0;
+}
+
+.donor-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    background-color: var(--bg-light);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.donor-item:last-child {
+    margin-bottom: 0;
+}
+
+.donor-item:hover {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.donor-item img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--border-color);
+}
+
+.donor-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.donor-info > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.donor-info .name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-dark);
+}
+
+.donor-info .time {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.donor-info .donation-text {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.donor-info .donation-text strong {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Top User Card (Leaderboard) */
+.top-user-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.top-user-card.main {
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.top-user-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
+    border: 3px solid var(--border-color);
+}
+
+.top-user-card.main img {
+    border-color: var(--border-color);
+}
+
+.top-user-card .stars {
+    color: #ffc107;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.top-user-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.top-user-card p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.top-user-card .total-points {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin: 5px 0 15px 0;
+}
+
+.rank-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+}
+
+.rank-badge.gold {
+    background-color: #ffc107;
+}
+
+.rank-badge.silver {
+    background-color: #c0c0c0;
+}
+
+.rank-badge.bronze {
+    background-color: #cd7f32;
+}
+
+/* Shelter Cards */
+.adopsi-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.adopsi-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.adopsi-card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.adopsi-card-body h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.adopsi-card-body .cat-info {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.adopsi-card-body .cat-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.adopsi-card-body p {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.card-actions.shelter-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.card-actions.shelter-actions .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+/* Donasi Card (Shelter) */
+.donasi-card {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.donasi-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.donasi-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.donasi-card-body h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.donasi-card-body .progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.donasi-card-body .progress-bar-fill {
+    height: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.donasi-card-body .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.donasi-card-body .progress-info .raised {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.donasi-card-body .progress-info .target {
+    color: var(--text-light);
+}
+
+.donasi-card-body p {
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+/* Stat Card (Shelter Dashboard) */
+.stat-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-card .icon {
+    font-size: 24px;
+    padding: 15px;
+    border-radius: 50%;
+}
+
+.stat-card .icon.blue {
+    background-color: #E3F2FD;
+    color: #2196F3;
+}
+
+.stat-card .icon.red {
+    background-color: #FFEBEE;
+    color: #F44336;
+}
+
+.stat-card .icon.green {
+    background-color: #E8F5E9;
+    color: #4CAF50;
+}
+
+.stat-card .text h4 {
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.stat-card .text p {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.list-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.list-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item .info {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.list-item .info span {
+    font-weight: 600;
+}
+
+.list-item .info p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin: 5px 0 0 0;
+}
+
+/* Cat Identity Card (Rawat Kucing) */
+.cat-identity-card {
+    background-color: var(--yellow-color);
+    border-radius: 12px;
+    padding: 25px;
+    color: var(--text-dark);
+    position: relative;
+    overflow: hidden;
+    background-image: url('../../images/rawat-kucing/Group9791.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.cat-identity-card .card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cat-identity-card .cat-details {
+    flex-grow: 1;
+}
+
+.cat-identity-card .cat-name {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.cat-identity-card h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.cat-identity-card .tag {
+    font-size: 12px;
+    background-color: #3B82F6;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+}
+
+.cat-identity-card .cat-info {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.cat-identity-card .cat-info span i {
+    margin-right: 5px;
+}
+
+.cat-identity-card img {
+    height: 100px;
+}
+
+.cat-nav-btn {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.cat-nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Reminder Card */
+.reminder-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.reminder-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.reminder-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-dark);
+}
+
+.reminder-item:last-child {
+    margin-bottom: 0;
+}
+
+.reminder-item .reminder-info {
+    flex-grow: 1;
+}
+
+.reminder-item .reminder-info span {
+    font-weight: 600;
+}
+
+.reminder-item .reminder-info p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 2px;
+}
+
+.reminder-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reminder-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-light);
+    padding: 5px;
+}
+
+.reminder-actions button:hover {
+    color: var(--secondary-color);
+}
+
+/* Activity Card */
+.activity-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.activity-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.activity-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.activity-card .date-label {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.activity-date-box {
+    text-align: center;
+    background-color: #EFF6FF;
+    color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: 600;
+}
+
+.activity-date-box span {
+    display: block;
+    font-size: 20px;
+}
+
+.activity-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.activity-info p {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.alarm-toggle {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.alarm-toggle.active {
+    color: var(--secondary-color);
+}
+

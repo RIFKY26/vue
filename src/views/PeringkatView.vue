@@ -63,7 +63,10 @@
         <tbody>
           <tr v-for="user in leaderboardData" :key="user.id">
             <td>{{ user.rank }}</td>
-            <td><img :src="user.avatar" alt="Avatar"> {{ user.nama }}</td>
+            <td>
+              <img :src="user.avatar" alt="Avatar">
+              <span>{{ user.nama }}</span>
+            </td>
             <td>{{ user.poinAdopsi }}</td>
             <td>{{ user.poinLapor }}</td>
             <td>{{ user.poinDonasi }}</td>
@@ -159,7 +162,7 @@ function closeModal() {
 </script>
 
 <style scoped>
-@import '@/assets/peringkat.css';
+@import '@/assets/css/pages/peringkat.css';
 /* CSS untuk modal dan tabel sudah ada di main.css (global) */
 .tindakan-btn {
   cursor: pointer;

@@ -1,38 +1,41 @@
 <template>
-  <main>
-    <!-- HEADER -->
-    <div class="main-header">
-      <h1>Lapor</h1>
+    <main>
+      <!-- HEADER -->
+      <div class="main-header">
+        <h1>Lapor</h1>
       <span class="breadcrumb">LAPOR / DAFTAR LAPORAN</span>
     </div>
 
     <div class="lapor-controls">
       <router-link to="/form-lapor" class="btn btn-primary">
-        <i class="fa-solid fa-plus"></i>
-        Laporkan
+          <i class="fa-solid fa-plus"></i>
+          Laporkan
       </router-link>
-    </div>
+      </div>
 
-    <!-- GRID LAPORAN -->
-    <section class="report-grid">
-      <div v-for="lapor in laporanList" :key="lapor.id" class="report-card">
-        <img :src="lapor.image" :alt="'Laporan ' + lapor.headline" />
-        <div class="report-card-content">
-          <div class="report-card-header">
-            <h2>{{ lapor.headline }}</h2>
-            <span>• {{ lapor.timeAgo }}</span>
-          </div>
+      <!-- GRID LAPORAN -->
+      <section class="report-grid">
+        <div v-for="lapor in laporanList" :key="lapor.id" class="report-card">
+          <img :src="lapor.image" :alt="'Laporan ' + lapor.headline" />
+          <div class="report-card-content">
+            <div class="report-card-header">
+              <h2>{{ lapor.headline }}</h2>
+              <span>• {{ lapor.timeAgo }}</span>
+            </div>
 
-          <div class="cat-info">
-            <span><i class="fa-solid fa-venus"></i> {{ lapor.gender }}</span>
-            <span><i class="fa-solid fa-paw"></i> {{ lapor.ras }}</span>
-            <span><i class="fa-solid fa-kit-medical"></i> {{ lapor.kondisi }}</span>
-          </div>
+            <div class="cat-info">
+              <span>
+                <i :class="lapor.gender === 'Betina' ? 'fa-solid fa-venus' : 'fa-solid fa-mars'"></i> 
+                {{ lapor.gender }}
+              </span>
+              <span><i class="fa-solid fa-paw"></i> {{ lapor.ras }}</span>
+              <span><i class="fa-solid fa-kit-medical"></i> {{ lapor.kondisi }}</span>
+            </div>
 
-          <p>{{ lapor.deskripsi }}</p>
+            <p>{{ lapor.deskripsi }}</p>
 
-          <div class="card-actions">
-            <button class="btn btn-warning" @click="openModal(lapor)">Lihat Detail</button>
+            <div class="card-actions">
+              <button class="btn btn-warning" @click="openModal(lapor)">Lihat Detail</button>
             <button 
               v-if="lapor.status === 'Diselamatkan'" 
               class="btn btn-info"
@@ -49,101 +52,101 @@
               <i class="fa-solid fa-clock"></i>
               <span>Menunggu Tindakan</span>
             </button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
 
-  <!-- MODAL DETAIL / EDIT -->
-  <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>{{ isEditing ? 'Edit Laporan' : 'Detail Laporan' }}</h3>
-        <button class="modal-close" @click="closeModal">&times;</button>
-      </div>
+    <!-- MODAL DETAIL / EDIT -->
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>{{ isEditing ? 'Edit Laporan' : 'Detail Laporan' }}</h3>
+          <button class="modal-close" @click="closeModal">&times;</button>
+        </div>
 
-      <div class="modal-body">
-        <!-- MODE DETAIL -->
-        <div v-if="!isEditing">
-          <div class="modal-content-grid">
-            <img :src="laporan.image" alt="Foto Kucing" class="modal-image" />
-            <div class="modal-info">
-              <div class="info-field">
-                <label>Kondisi</label>
-                <span>{{ laporan.kondisi }}</span>
+        <div class="modal-body">
+          <!-- MODE DETAIL -->
+          <div v-if="!isEditing">
+            <div class="modal-content-grid">
+              <img :src="laporan.image" alt="Foto Kucing" class="modal-image" />
+              <div class="modal-info">
+                <div class="info-field">
+                  <label>Kondisi</label>
+                  <span>{{ laporan.kondisi }}</span>
+                </div>
+                <div class="info-field">
+                  <label>Jenis Kelamin</label>
+                  <span>{{ laporan.gender }}</span>
+                </div>
+                <div class="info-field">
+                  <label>Ras Kucing</label>
+                  <span>{{ laporan.ras }}</span>
+                </div>
               </div>
-              <div class="info-field">
-                <label>Jenis Kelamin</label>
-                <span>{{ laporan.gender }}</span>
-              </div>
-              <div class="info-field">
-                <label>Ras Kucing</label>
-                <span>{{ laporan.ras }}</span>
-              </div>
+            </div>
+
+            <div class="modal-section">
+              <h4>Deskripsi</h4>
+              <p>{{ laporan.deskripsi }}</p>
+            </div>
+
+            <div class="modal-section">
+              <h4>Status</h4>
+              <span
+                class="status-badge"
+                :class="{
+                  rescued: laporan.status === 'Diselamatkan',
+                  pending: laporan.status === 'Menunggu Tindakan',
+                }"
+              >
+                {{ laporan.status }}
+              </span>
+
+            <template v-if="laporan.status === 'Diselamatkan' && laporan.shelter">
+                <p class="rescued-by">Diselamatkan oleh:</p>
+                <div class="shelter-info">
+                <div class="icon"><i class="fa-solid fa-building"></i></div>
+                  <span>{{ laporan.shelter }}</span>
+                </div>
+              </template>
             </div>
           </div>
 
-          <div class="modal-section">
-            <h4>Deskripsi</h4>
-            <p>{{ laporan.deskripsi }}</p>
-          </div>
+          <!-- MODE EDIT -->
+          <form v-else @submit.prevent="saveEdit">
+            <div class="form-group">
+              <label>Kondisi</label>
+              <input v-model="laporan.kondisi" type="text" required />
+            </div>
 
-          <div class="modal-section">
-            <h4>Status</h4>
-            <span
-              class="status-badge"
-              :class="{
-                rescued: laporan.status === 'Diselamatkan',
-                pending: laporan.status === 'Menunggu Tindakan',
-              }"
-            >
-              {{ laporan.status }}
-            </span>
+            <div class="form-group">
+              <label>Jenis Kelamin</label>
+              <select v-model="laporan.gender">
+                <option>Jantan</option>
+                <option>Betina</option>
+              </select>
+            </div>
 
-            <template v-if="laporan.status === 'Diselamatkan' && laporan.shelter">
-              <p class="rescued-by">Diselamatkan oleh:</p>
-              <div class="shelter-info">
-                <div class="icon"><i class="fa-solid fa-building"></i></div>
-                <span>{{ laporan.shelter }}</span>
-              </div>
-            </template>
-          </div>
+            <div class="form-group">
+              <label>Ras Kucing</label>
+              <input v-model="laporan.ras" type="text" required />
+            </div>
+
+            <div class="form-group">
+              <label>Deskripsi</label>
+              <textarea v-model="laporan.deskripsi" rows="3"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" @click="toggleEditMode">Batal</button>
+              <button type="submit" class="btn btn-warning">Simpan</button>
+            </div>
+          </form>
         </div>
 
-        <!-- MODE EDIT -->
-        <form v-else @submit.prevent="saveEdit">
-          <div class="form-group">
-            <label>Kondisi</label>
-            <input v-model="laporan.kondisi" type="text" required />
-          </div>
-
-          <div class="form-group">
-            <label>Jenis Kelamin</label>
-            <select v-model="laporan.gender">
-              <option>Jantan</option>
-              <option>Betina</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Ras Kucing</label>
-            <input v-model="laporan.ras" type="text" required />
-          </div>
-
-          <div class="form-group">
-            <label>Deskripsi</label>
-            <textarea v-model="laporan.deskripsi" rows="3"></textarea>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" @click="toggleEditMode">Batal</button>
-            <button type="submit" class="btn btn-warning">Simpan</button>
-          </div>
-        </form>
-      </div>
-
-      <div v-if="!isEditing" class="modal-footer">
+        <div v-if="!isEditing" class="modal-footer">
         <button class="btn btn-secondary" @click="deleteReport">Hapus</button>
         <button class="btn btn-primary" @click="toggleEditMode">Ubah</button>
       </div>
@@ -280,19 +283,23 @@ function deleteReport() {
   background-color: var(--secondary-color);
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 10px 18px;
   border-radius: 8px;
   font-weight: 500;
+  font-size: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
   background-color: var(--blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 /* Report Grid */
@@ -359,24 +366,26 @@ function deleteReport() {
 .cat-info {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 15px;
-  font-size: 13px;
-  color: var(--text-light);
-  font-family: 'Poppins', sans-serif;
 }
 
 .cat-info span {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
-  color: var(--text-light);
+  background-color: var(--blue-light);
+  color: var(--secondary-color);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .cat-info i {
   color: var(--secondary-color) !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   display: inline-block !important;
   font-family: "Font Awesome 6 Free" !important;
   font-weight: 900 !important;
@@ -384,19 +393,22 @@ function deleteReport() {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
   vertical-align: middle !important;
-  margin-right: 4px !important;
+  width: 14px !important;
+  text-align: center !important;
   line-height: 1 !important;
 }
 
 /* Ensure icons are visible with :deep() */
 :deep(.cat-info i.fa-venus),
 :deep(.cat-info i.fa-paw),
-:deep(.cat-info i.fa-kit-medical) {
+:deep(.cat-info i.fa-kit-medical),
+:deep(.cat-info i.fa-mars) {
   font-family: "Font Awesome 6 Free" !important;
   font-weight: 900 !important;
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
+  color: var(--secondary-color) !important;
 }
 
 

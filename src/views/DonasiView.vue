@@ -140,5 +140,5 @@ const filteredDonationData = computed(() => {
 </script>
 
 <style scoped>
-@import '@/assets/donasi.css';
+@import '@/assets/css/pages/donasi.css';
 </style>

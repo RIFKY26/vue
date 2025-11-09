@@ -363,5 +363,5 @@
   
   <style scoped>
     /* Kosongkan, karena semua style sudah ada di main.css */
-    @import '@/assets/rawat.css';
+    @import '@/assets/css/pages/rawat.css';
   </style>

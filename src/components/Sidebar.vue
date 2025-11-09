@@ -4,7 +4,7 @@
     <nav>
       <h3>Filter Utama</h3>
       <ul>
-        <li><RouterLink to="/"><i class="fa-solid fa-house"></i> Beranda</RouterLink></li>
+        <li><RouterLink to="/app/home"><i class="fa-solid fa-house"></i> Beranda</RouterLink></li>
         <li><RouterLink to="/lapor"><i class="fa-solid fa-flag"></i> Lapor</RouterLink></li>
         <li><RouterLink to="/adopsi"><i class="fa-solid fa-paw"></i> Adopsi</RouterLink></li>
         <li><RouterLink to="/donasi"><i class="fa-solid fa-hand-holding-dollar"></i> Donasi</RouterLink></li>
@@ -56,8 +56,11 @@ function handleOpenChat(event) {
 
 // Handler untuk logout
 function handleLogout() {
-  // Redirect ke halaman login
-  router.push('/auth')
+  // Clear authentication state
+  localStorage.removeItem('isAuthenticated')
+  localStorage.removeItem('userEmail')
+  // Redirect ke landing page
+  router.push('/')
 }
 </script>
 

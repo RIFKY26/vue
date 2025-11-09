@@ -8,7 +8,7 @@
       </p>
       <div class="button-group">
         <button class="btn btn-cat-lover" @click="goToUserLogin">Pecinta Kucing</button>
-        <button class="btn btn-shelter disabled" disabled>Shelter</button>
+        <button class="btn btn-shelter" @click="goToShelterLogin">Shelter</button>
       </div>
     </div>
   </main>
@@ -23,6 +23,11 @@ const router = useRouter()
 
 function goToUserLogin() {
   router.push('/login-user')
+}
+
+function goToShelterLogin() {
+  // Shelter login belum tersedia
+  alert('Fitur login Shelter akan segera tersedia!')
 }
 </script>
 

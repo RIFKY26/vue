@@ -357,6 +357,8 @@ function saveSettings() {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Profile Card */

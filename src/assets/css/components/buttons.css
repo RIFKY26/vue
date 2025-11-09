@@ -1,0 +1,208 @@
+/* ================================== */
+/* == BUTTONS COMPONENTS            == */
+/* ================================== */
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.control-buttons button {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.control-buttons button.active,
+.control-buttons button:hover {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border-color: var(--secondary-color);
+}
+
+.btn-adopt {
+    background-color: var(--yellow-color);
+    color: var(--text-dark);
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+.btn-adopt:hover {
+    opacity: 0.9;
+}
+
+.btn-contact {
+    background-color: var(--yellow-color);
+    color: var(--text-dark);
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-contact:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-contact i {
+    font-size: 16px;
+}
+
+.btn-submit {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-donate {
+    background-color: var(--yellow-color);
+    color: var(--text-dark);
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s ease;
+    margin-top: auto;
+}
+
+.btn-donate:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-payment {
+    background-color: var(--yellow-color);
+    color: var(--text-dark);
+    border: none;
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-secondary {
+    background-color: #E9ECEF;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background-color: #DEE2E6;
+}
+
+.btn-danger {
+    background-color: #F44336;
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background-color: #D32F2F;
+}
+
+.btn-success {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-success:hover {
+    background-color: #45a049;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    background-color: var(--bg-light);
+    border-color: var(--secondary-color);
+}
+
+.btn-icon {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-group .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.list-item .btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.tindakan-btn {
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
