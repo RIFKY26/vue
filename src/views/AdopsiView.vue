@@ -11,7 +11,7 @@
           <i class="fa-solid fa-filter"></i> Filter
         </button>
         <button @click="showList" :class="{ active: !isFilterOpen }">
-          <i class="fa-solid fa-list"></i> Hasil Adopsi
+          <i class="fa-solid fa-list"></i> Semua
         </button>
       </div>
 

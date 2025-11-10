@@ -38,57 +38,55 @@ html, body {
 
 .login-box {
     background-color: #ffffff;
-    padding: 30px 25px;
+    padding: 50px 40px;             /* Lebih besar untuk tampilan lega */
     border-radius: 15px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
     text-align: center;
+    max-width: 450px;
     width: 100%;
-    max-width: 380px;
-    max-height: 90vh;
-    overflow-y: auto;
 }
 
+/* Judul Login */
 .login-title {
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 700;
     color: #333;
-    margin-bottom: 20px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.cat-image {
-    width: 120px;
-    height: auto;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
-}
-
-.description {
-    font-size: 14px;
-    color: #666;
     margin-bottom: 25px;
-    line-height: 1.5;
-    font-family: 'Poppins', sans-serif;
 }
 
+/* Ilustrasi kucing */
+.cat-image {
+    width: 200px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+/* Deskripsi */
+.description {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 35px;
+    line-height: 1.6;
+}
+
+/* Tombol pilihan login */
 .button-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 .btn {
-    padding: 12px 15px;
+    padding: 15px 20px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     color: #ffffff;
     width: 100%;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    font-family: 'Poppins', sans-serif;
 }
 
 .btn-cat-lover,
@@ -106,7 +104,7 @@ html, body {
 /* =========================================
    MOBILE RESPONSIVE
    ========================================= */
-@media (max-width: 768px) {
+@media (max-width: 120px) {
     .pilihan-login-container {
         padding: 20px;
     }

@@ -63,7 +63,7 @@ const messagesContainer = ref(null)
 const messages = ref([
   {
     id: 1,
-    text: `Halo! Terima kasih atas minat Anda untuk mengadopsi kucing dari ${props.shelterName}. Ada yang ingin ditanyakan?`,
+    text: `Halo! Ada yang ingin ditanyakan?`,
     sender: 'shelter',
     time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
   }
@@ -144,22 +144,23 @@ watch(() => props.isOpen, (isOpen) => {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 380px;
-  height: 500px;
+  width: 320px;
+  height: 420px;
+  max-height: 70vh;
   background-color: var(--white);
   border-radius: 12px;
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   z-index: 1000;
-  transform: translateY(100%);
+  transform: translateY(100%) scale(0.9);
   opacity: 0;
   transition: all 0.3s ease-in-out;
   border: 1px solid var(--border-color);
 }
 
 .chat-window-container.open {
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   opacity: 1;
 }
 
@@ -169,18 +170,20 @@ watch(() => props.isOpen, (isOpen) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
   z-index: 999;
   display: block;
   cursor: pointer;
+  backdrop-filter: blur(2px);
 }
 
 @media (max-width: 768px) {
   .chat-window-container {
-    width: calc(100% - 40px);
-    height: calc(100vh - 40px);
-    bottom: 20px;
-    right: 20px;
+    width: calc(100% - 30px);
+    height: calc(100vh - 100px);
+    max-height: 75vh;
+    bottom: 15px;
+    right: 15px;
   }
 }
 
@@ -188,10 +191,11 @@ watch(() => props.isOpen, (isOpen) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--blue-light);
   border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
 }
 
 .chat-window-user {
@@ -201,21 +205,24 @@ watch(() => props.isOpen, (isOpen) => {
 }
 
 .chat-window-user img {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .chat-window-name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-dark);
+  line-height: 1.2;
 }
 
 .chat-window-status {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-light);
+  line-height: 1.2;
 }
 
 .close-btn {
@@ -235,17 +242,19 @@ watch(() => props.isOpen, (isOpen) => {
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   background-color: var(--bg-light);
+  min-height: 0;
 }
 
 .message {
   display: flex;
   flex-direction: column;
-  max-width: 75%;
+  max-width: 80%;
+  word-wrap: break-word;
 }
 
 .message.sent {
@@ -257,10 +266,11 @@ watch(() => props.isOpen, (isOpen) => {
 }
 
 .message-content {
-  padding: 10px 15px;
+  padding: 10px 14px;
   border-radius: 12px;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .message.sent .message-content {
@@ -284,20 +294,21 @@ watch(() => props.isOpen, (isOpen) => {
 
 .chat-input-area {
   display: flex;
-  gap: 10px;
-  padding: 15px 20px;
+  gap: 8px;
+  padding: 10px 12px;
   border-top: 1px solid var(--border-color);
   background-color: var(--white);
   border-radius: 0 0 12px 12px;
+  flex-shrink: 0;
 }
 
 .chat-input {
   flex: 1;
-  padding: 12px 15px;
+  padding: 10px 12px;
   border: 1px solid var(--border-color);
   border-radius: 20px;
   font-family: 'Poppins', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
 }
 
@@ -309,8 +320,8 @@ watch(() => props.isOpen, (isOpen) => {
   background-color: var(--secondary-color);
   color: white;
   border: none;
-  width: 45px;
-  height: 45px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -318,6 +329,7 @@ watch(() => props.isOpen, (isOpen) => {
   justify-content: center;
   transition: background-color 0.2s;
   flex-shrink: 0;
+  font-size: 13px;
 }
 
 .send-btn:hover {

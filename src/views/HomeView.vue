@@ -12,7 +12,7 @@
         <h2>{{ userData.nama }}</h2>
       </div>
       <div class="welcome-image-wrapper">
-        <img src="/image/rawat-kucing/Group9791.svg" alt="Cute Cat Illustration" class="cat-illustration" />
+        <img :src="kucingSvg" alt="Cute Cat Illustration" class="cat-illustration" />
       </div>
     </div>
 
@@ -169,6 +169,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import kucingSvg from '@/assets/images/kucing.svg'
 
 // User Data
 const userData = ref({
@@ -298,7 +299,7 @@ const reportStatus = ref({
 .welcome-banner {
   background-color: var(--yellow-color);
   border-radius: 12px;
-  padding: 30px;
+  padding: 25px;
   color: var(--text-dark);
   position: relative;
   overflow: hidden;
@@ -306,31 +307,37 @@ const reportStatus = ref({
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   min-height: 160px;
-}
-
-/* Paw Print Pattern Background */
-.welcome-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.25'%3E%3Cpath d='M25 25c0-2.5-2-4.5-4.5-4.5s-4.5 2-4.5 4.5 2 4.5 4.5 4.5 4.5-2 4.5-4.5zm-10-10c0-1.2 1-2.2 2.2-2.2s2.2 1 2.2 2.2-1 2.2-2.2 2.2-2.2-1-2.2-2.2zm10 0c0-1.2 1-2.2 2.2-2.2s2.2 1 2.2 2.2-1 2.2-2.2 2.2-2.2-1-2.2-2.2zm-5-5c0-1.2 1-2.2 2.2-2.2s2.2 1 2.2 2.2-1 2.2-2.2 2.2-2.2-1-2.2-2.2z'/%3E%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 35 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M17.5 17.5c0-1.8-1.5-3.3-3.3-3.3s-3.3 1.5-3.3 3.3 1.5 3.3 3.3 3.3 3.3-1.5 3.3-3.3zm-7-7c0-.9.7-1.6 1.6-1.6s1.6.7 1.6 1.6-.7 1.6-1.6 1.6-1.6-.7-1.6-1.6zm7 0c0-.9.7-1.6 1.6-1.6s1.6.7 1.6 1.6-.7 1.6-1.6 1.6-1.6-.7-1.6-1.6zm-3.5-3.5c0-.9.7-1.6 1.6-1.6s1.6.7 1.6 1.6-.7 1.6-1.6 1.6-1.6-.7-1.6-1.6z'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 80px 80px, 55px 55px;
-  background-position: 0 0, 40px 40px;
-  opacity: 0.6;
-  z-index: 0;
+  background-image: url('/image/rawat-kucing/Group9791.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .welcome-content {
   position: relative;
   z-index: 1;
   flex: 1;
+  min-width: 0;
+}
+
+.welcome-image-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 20px;
+  flex-shrink: 0;
+}
+
+.welcome-banner .cat-illustration {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .welcome-banner p {
@@ -347,23 +354,6 @@ const reportStatus = ref({
   color: var(--text-dark);
 }
 
-.welcome-image-wrapper {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-left: 20px;
-  flex-shrink: 0;
-}
-
-.welcome-banner .cat-illustration {
-  height: 150px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
 
 /* Points Summary */
 .points-summary {
@@ -660,6 +650,7 @@ const reportStatus = ref({
     flex-direction: column;
     text-align: center;
     gap: 20px;
+    padding: 20px;
   }
 
   .welcome-banner p {

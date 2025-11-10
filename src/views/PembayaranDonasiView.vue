@@ -201,6 +201,9 @@
   <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import qrisIcon from '@/assets/images/donasi/pembayaran/image2.png'
+import bankIcon from '@/assets/images/donasi/pembayaran/image1.png'
+import walletIcon from '@/assets/images/donasi/pembayaran/image3.png'
   
 const route = useRoute()
 const router = useRouter()
@@ -231,19 +234,19 @@ const paymentMethods = [
     id: 'qris',
     name: 'QRIS',
     description: 'Bayar dengan QR Code',
-    icon: 'https://i.imgur.com/28h2w2I.png'
+    icon: qrisIcon
   },
   {
     id: 'bank-transfer',
     name: 'Transfer Bank',
     description: 'BCA, Mandiri, BNI, BRI',
-    icon: 'https://i.imgur.com/placeholder-bank.png'
+    icon: bankIcon
   },
   {
     id: 'e-wallet',
     name: 'E-Wallet',
     description: 'GoPay, OVO, DANA, LinkAja',
-    icon: 'https://i.imgur.com/placeholder-ewallet.png'
+    icon: walletIcon
   }
 ]
 

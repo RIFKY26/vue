@@ -28,8 +28,8 @@
                 <i :class="lapor.gender === 'Betina' ? 'fa-solid fa-venus' : 'fa-solid fa-mars'"></i> 
                 {{ lapor.gender }}
               </span>
-              <span><i class="fa-solid fa-paw"></i> {{ lapor.ras }}</span>
-              <span><i class="fa-solid fa-kit-medical"></i> {{ lapor.kondisi }}</span>
+            <span><i class="fa-solid fa-paw"></i> {{ lapor.ras }}</span>
+            <span><i class="fa-solid fa-kit-medical"></i> {{ lapor.kondisi }}</span>
             </div>
 
             <p>{{ lapor.deskripsi }}</p>
