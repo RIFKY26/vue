@@ -1,0 +1,5 @@
+[dotenv@17.2.3] injecting env (6) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+{"level":30,"time":1763791111213,"pid":17848,"hostname":"SlimBook14R5","msg":"Server listening at http://[::1]:3000"}
+Backend berjalan di http://localhost:3000
+{"level":30,"time":1763791111222,"pid":17848,"hostname":"SlimBook14R5","msg":"Server listening at http://127.0.0.1:3000"}
