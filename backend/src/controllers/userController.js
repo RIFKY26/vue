@@ -6,7 +6,7 @@ export default {
   async getAllUsers(req, reply) {
     try {
       const [rows] = await db.query(
-        "SELECT adopter_id, name, email, phone FROM adopter"
+        "SELECT adopter_id, nama, email, phone FROM adopter"
       );
       return rows;
     } catch (error) {
