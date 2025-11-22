@@ -44,100 +44,72 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
+import axios from 'axios'
 
 // Search query
 const searchQuery = ref('')
 
-// Fungsi bantuan untuk format Rupiah
-const formatRupiah = (number) => {
-  return 'Rp. ' + new Intl.NumberFormat('id-ID').format(number);
-};
+// Format Rupiah
+const formatRupiah = (number) =>
+  'Rp. ' + new Intl.NumberFormat('id-ID').format(number)
 
-// --- DATA HARDCODE (SEKARANG ADA 4 ITEM) ---
-const rawDonationData = ref([
-  {
-    id: 'pakan-kucing',
-    title: "Bantu Pakan Kucing Jalanan",
-    image: "/image/donasi/Rectangle 23853 (1).png", 
-    shelter: { 
-      name: "Rumah Kucing BDG", 
-      location: "Bandung", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Masih banyak kucing jalanan yang kelaparan... Selengkapnya...",
-    terkumpul: 1250000, 
-    target: 5000000,
-  },
-  {
-    id: 'rawat-kucing',
-    title: "Rawat Kucing Sakit Terlantar",
-    image: "/image/donasi/Rectangle 23853.png",
-    shelter: { 
-      name: "Meow Shelter", 
-      location: "Jakarta", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Banyak kucing sakit yang kami temukan... Selengkapnya...",
-    terkumpul: 4800000,
-    target: 5000000,
-  },
-  // ===== ITEM BARU 1 =====
-  {
-    id: 'sterilisasi-liar',
-    title: "Program Sterilisasi Kucing Liar",
-    image: "/image/donasi/Rectangle 23853 (1).png", // Ganti dengan gambar baru nanti
-    shelter: { 
-      name: "Cat Haven", 
-      location: "Surabaya", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Bantu kami menekan populasi kucing jalanan dengan manusiawi.",
-    terkumpul: 7500000,
-    target: 10000000,
-  },
-  // ===== ITEM BARU 2 =====
-  {
-    id: 'shelter-baru',
-    title: "Bangun Shelter Baru yang Layak",
-    image: "/image/donasi/Rectangle 23853.png", // Ganti dengan gambar baru nanti
-    shelter: { 
-      name: "Paw Friends", 
-      location: "Yogyakarta", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Shelter kami sudah over-kapasitas. Bantu kami rumah baru.",
-    terkumpul: 2100000,
-    target: 15000000,
-  }
-]);
+// Data backend
+const rawDonationData = ref([])
 
-// Computed property untuk menghitung persentase dan format uang
-const donationData = computed(() => {
-  return rawDonationData.value.map(program => ({
+// Ambil data dari backend
+onMounted(async () => {
+  const res = await axios.get('http://localhost:3000/api/donasi')
+
+  // Mapping supaya SESUAI TEMPLATE kamu
+  rawDonationData.value = res.data.map(item => ({
+    id: item.id,
+    title: item.headline,
+    description: item.deskripsi,
+
+    // Fallback gambar supaya layout tidak rusak
+    image: item.shelter_foto
+      ? `/image/${item.shelter_foto}`
+      : "/image/donasi/Rectangle 23853.png",
+
+    shelter: {
+      name: item.shelter ?? "Shelter",
+      location: item.lokasi ?? "Lokasi",
+      avatar: item.shelter_foto
+        ? `/image/${item.shelter_foto}`
+        : "/image/donasi/image.png"
+    },
+
+    terkumpul: item.terkumpul ?? 0, // backend belum punya → fallback 0
+    target: item.target ?? 10000
+  }))
+})
+
+// Tambahan format + progress (sesuai template lama)
+const donationData = computed(() =>
+  rawDonationData.value.map(program => ({
     ...program,
     progress: (program.terkumpul / program.target) * 100,
     terkumpulFormatted: formatRupiah(program.terkumpul),
     targetFormatted: formatRupiah(program.target)
-  }));
-});
+  }))
+)
 
-// Computed property untuk filter berdasarkan search query
+// Search filter
 const filteredDonationData = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return donationData.value;
-  }
-  
-  const query = searchQuery.value.toLowerCase().trim();
-  return donationData.value.filter(program => 
-    program.title.toLowerCase().includes(query) ||
-    program.shelter.name.toLowerCase().includes(query) ||
-    program.shelter.location.toLowerCase().includes(query) ||
-    program.description.toLowerCase().includes(query)
-  );
-});
+  const q = searchQuery.value.toLowerCase().trim()
+  if (!q) return donationData.value
+
+  return donationData.value.filter(program =>
+    program.title.toLowerCase().includes(q) ||
+    program.shelter.name.toLowerCase().includes(q) ||
+    program.shelter.location.toLowerCase().includes(q) ||
+    program.description.toLowerCase().includes(q)
+  )
+})
 </script>
+
 
 <style scoped>
 @import '@/assets/css/pages/donasi.css';

@@ -65,95 +65,67 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-// useRoute digunakan untuk membaca URL
-// RouterLink digunakan di dalam <template>
-import { useRoute, RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
 
-// --- FUNGSI BANTUAN ---
-const formatRupiah = (number) => {
-  return 'Rp. ' + new Intl.NumberFormat('id-ID').format(number)
-}
+const formatRupiah = (number) =>
+  'Rp. ' + new Intl.NumberFormat('id-ID').format(number)
 
-// --- DATABASE SIMULASI (SESUAI PATH GAMBARMU) ---
-const donationDatabase = ref({
-  'pakan-kucing': {
-    id: 'pakan-kucing',
-    title: 'Bantu Pakan & Perawatan Kucing Jalanan',
-    // Path dari folder 'public'
-    image: '/image/donasi/Rectangle 23853 (1).png',
-    shelter: {
-      name: 'Rumah Kucing Bahagia',
-      location: 'Jakarta Utara',
-      avatar: '/image/donasi/image.png',
-    },
-    description:
-      'Masih banyak kucing jalanan yang kelaparan dan tidak mendapatkan tempat aman. Melalui donasi ini, kamu bisa membantu menyediakan pakan, vaksinasi, serta biaya perawatan agar mereka bisa hidup lebih sehat dan berpeluang untuk diadopsi.',
-    terkumpul: 200000,
-    target: 200000,
-    donors: [
-      {
-        name: 'Ramadhan',
-        avatar: '/image/peringkat/laufey.png',
-        time: '12 menit yang lalu',
-        amount: 100000,
+const route = useRoute()
+const campaign = ref(null)
+
+onMounted(async () => {
+  const id = route.params.id
+
+  try {
+    const res = await axios.get(`http://localhost:3000/api/donasi/${id}`)
+    const d = res.data
+
+    // --- Fallback biar tampilan TIDAK BERUBAH ---
+    campaign.value = {
+      id: d.id,
+      title: d.headline,
+      description: d.deskripsi,
+
+      // jika backend tidak punya image kampanye → jangan rubah layout
+      image: d.image ? `/image/${d.image}` : '/image/donasi/Rectangle 23853.png',
+
+      // Fallback shelter
+      shelter: {
+        name: d.shelter ?? "Shelter",
+        location: d.lokasi ?? "Lokasi",
+        avatar: d.shelter_foto
+          ? `/image/${d.shelter_foto}`
+          : '/image/donasi/image.png'
       },
-      {
-        name: 'Anonim',
-        avatar: '/image/peringkat/yungkai.png',
-        time: '15 menit yang lalu',
-        amount: 50000,
-      },
-      {
-        name: 'Budi',
-        avatar: '/image/peringkat/shaqonel.png',
-        time: '20 menit yang lalu',
-        amount: 50000,
-      },
-    ],
-  },
-  'rawat-kucing': {
-    id: 'rawat-kucing',
-    title: 'Rawat Kucing Sakit Terlantar',
-    // Path dari folder 'public'
-    image: '/image/donasi/Rectangle 23853.png',
-    shelter: {
-      name: 'Meow Shelter',
-      location: 'Jakarta',
-      avatar: '/image/donasi/image.png',
-    },
-    description: 'Banyak kucing sakit yang kami temukan... Selengkapnya...',
-    terkumpul: 4800000,
-    target: 5000000,
-    donors: [
-      {
-        name: 'Siti',
-        avatar: 'https://i.imgur.com/5D63UyY.jpg',
-        time: '5 menit yang lalu',
-        amount: 200000,
-      },
-    ],
-  },
-})
 
-// --- LOGIKA UTAMA ---
-const route = useRoute() // 1. Ambil informasi rute saat ini
-const campaignId = route.params.id // 2. Ambil ':id' dari URL (cth: "pakan-kucing")
+      // Fallback total & target biar progress bar muncul
+      terkumpul: d.total_terkumpul ?? 0,
+      target: d.target ?? 10000,
 
-// 3. 'computed' property akan mencari donasi yang benar
-const campaign = computed(() => {
-  const data = donationDatabase.value[campaignId]
-  if (!data) return null // Jika ID tidak ditemukan
+      progress: ((d.total_terkumpul ?? 0) / (d.target ?? 1)) * 100,
+      terkumpulFormatted: formatRupiah(d.total_terkumpul ?? 0),
+      targetFormatted: formatRupiah(d.target ?? 0),
 
-  // 4. Hitung data tambahan (progress bar, format rupiah)
-  return {
-    ...data,
-    progress: (data.terkumpul / data.target) * 100,
-    terkumpulFormatted: formatRupiah(data.terkumpul),
-    targetFormatted: formatRupiah(data.target),
+      // Jika backend belum ada data donatur → tetap tampil default
+      donors: d.donors?.length
+        ? d.donors
+        : [
+            {
+              name: "Belum ada donatur",
+              avatar: "/image/peringkat/shaqonel.png",
+              time: "",
+              amount: 0
+            }
+          ]
+    }
+  } catch (err) {
+    campaign.value = null
   }
 })
 </script>
+
 
 <style scoped>
 @import '@/assets/css/pages/donasi.css';
