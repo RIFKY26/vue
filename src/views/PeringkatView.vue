@@ -72,10 +72,11 @@
             <td>{{ user.poinDonasi }}</td>
             <td class="total"><strong>{{ user.totalPoin }}</strong></td>
             <td>
-              <i class="fa-solid fa-ellipsis tindakan-btn" 
-                 @click="openModal(user.id, user.nama)">
-              </i>
-            </td>
+  <i class="fa-solid fa-ellipsis tindakan-btn"
+     @click="openModal(user.id, user.nama)">
+  </i>
+</td>
+
           </tr>
         </tbody>
       </table>
@@ -109,57 +110,93 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from "vue"
+import axios from "axios"
 
-// --- DATA HARDCODE (dari peringkat.js lama) ---
-// Pastikan path gambar diawali dengan '/' untuk menunjuk ke folder 'public'
-const leaderboardData = ref([
-  { id: "Shaq O'niel", rank: 1, avatar: '/image/peringkat/shaqonel.png', nama: "Shaq O'niel", poinAdopsi: 832, poinLapor: 226, poinDonasi: 199, totalPoin: 1257 },
-  { id: "yungkai", rank: 2, avatar: '/image/peringkat/yungkai.png', nama: 'yung kai', poinAdopsi: 657, poinLapor: 686, poinDonasi: 756, totalPoin: 976 },
-  { id: "Rex Orange", rank: 3, avatar: '/image/peringkat/re oren.png', nama: 'Rex Orange', poinAdopsi: 787, poinLapor: 687, poinDonasi: 865, totalPoin: 865 },
-  { id: "Laufey", rank: 4, avatar: '/image/peringkat/laufey.png', nama: 'Laufey', poinAdopsi: 767, poinLapor: 758, poinDonasi: 767, totalPoin: 860 },
-]);
+// DATA leaderboard dari backend
+const leaderboardData = ref([])
 
-// Data untuk 3 teratas, diambil dari data utama
-const topUsers = computed(() => [
-    leaderboardData.value[0], // Peringkat 1
-    leaderboardData.value[1], // Peringkat 2
-    leaderboardData.value[2], // Peringkat 3
-]);
+// avatar default kalau tidak ada di DB
+const defaultAvatar = "/image/peringkat/shaqonel.png"
 
-const pointHistoryDatabase = {
-    "Shaq O'niel": [
-        { type: 'donasi', icon: 'fa-hand-holding-dollar', description: 'Donasi untuk Pakan Kucing', points: 199 },
-        { type: 'adopsi', icon: 'fa-paw', description: 'Adopsi kucing bernama Mochi', points: 832 },
-    ],
-    "yungkai": [
-        { type: 'adopsi', icon: 'fa-paw', description: 'Adopsi kucing bernama Leo', points: 657 },
-        { type: 'lapor', icon: 'fa-flag', description: 'Melaporkan kucing terlantar', points: 686 }
-    ],
-    "Rex Orange": [
-        { type: 'donasi', icon: 'fa-hand-holding-dollar', description: 'Donasi untuk Vaksinasi', points: 865 }
-    ],
-    "Laufey": [
-        { type: 'donasi', icon: 'fa-hand-holding-dollar', description: 'Donasi untuk Shelter Baru', points: 860 }
+// Ambil data dari backend
+onMounted(async () => {
+  const res = await axios.get("http://localhost:3000/api/peringkat")
+
+  // mapping backend → struktur tampilan
+  leaderboardData.value = res.data.map(item => ({
+    id: item.id_peringkat,
+    nama: item.username,
+    rank: item.rank,
+    avatar: defaultAvatar, // backend tidak punya avatar
+
+    // backend hanya punya 1 poin (jumlah_poin)
+    // tampilannya butuh 3 jenis poin → untuk sekarang fallback 0
+    poinAdopsi: item.nama_poin === "adopsi" ? item.jumlah_poin : 0,
+    poinLapor: item.nama_poin === "lapor" ? item.jumlah_poin : 0,
+    poinDonasi: item.nama_poin === "donasi" ? item.jumlah_poin : 0,
+
+    // total poin
+    totalPoin: item.jumlah_poin,
+
+    // tindakan (untuk modal)
+    tindakan: item.tindakan
+  }))
+})
+
+// TOP 3 user (langsung dari leaderboardData)
+const topUsers = computed(() => {
+  const sortedUsers = [...leaderboardData.value].sort((a, b) => a.rank - b.rank)
+  return [
+    sortedUsers[0] || {},
+    sortedUsers[1] || {},
+    sortedUsers[2] || {}
+  ]
+})
+
+// --- MODAL DATA (sementara kosong karena backend belum ada riwayat) ---
+const isModalOpen = ref(false)
+const modalTitle = ref("")
+const historyData = ref([])
+
+function openModal(id, name) {
+  modalTitle.value = `Riwayat Poin untuk ${name}`
+
+  // Cari user berdasarkan id yang diklik
+  const user = leaderboardData.value.find(u => u.id === id)
+
+  // Jika ketemu → isi modal pakai tindakan yang ada di database
+  if (user && user.tindakan) {
+    historyData.value = [
+      {
+        type:
+          user.poinDonasi > 0 ? "donasi" :
+          user.poinAdopsi > 0 ? "adopsi" :
+          "lapor",
+        icon:
+          user.poinDonasi > 0 ? "fa-hand-holding-dollar" :
+          user.poinAdopsi > 0 ? "fa-paw" :
+          "fa-flag",
+        description: user.tindakan,
+        points:
+          user.poinDonasi > 0 ? user.poinDonasi :
+          user.poinAdopsi > 0 ? user.poinAdopsi :
+          user.poinLapor
+      }
     ]
-};
+  } else {
+    historyData.value = []
+  }
 
-// --- Data untuk Modal ---
-const isModalOpen = ref(false);
-const modalTitle = ref('');
-const historyData = ref([]); // Data untuk ditampilkan di modal
-
-// --- METHODS ---
-function openModal(userId, userName) {
-  modalTitle.value = `Riwayat Poin untuk ${userName}`;
-  historyData.value = pointHistoryDatabase[userId] || [];
-  isModalOpen.value = true;
+  isModalOpen.value = true
 }
+
 
 function closeModal() {
-  isModalOpen.value = false;
+  isModalOpen.value = false
 }
 </script>
+
 
 <style scoped>
 @import '@/assets/css/pages/peringkat.css';

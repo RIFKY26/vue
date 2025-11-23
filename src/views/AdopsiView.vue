@@ -145,6 +145,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import axios from "axios"
 
 // --- 1. DATA REAKTIF ---
 const isFilterOpen = ref(false)
@@ -155,50 +156,32 @@ const selectedFilters = ref({
 })
 
 // --- 2. DATA DUMMY KUCING ---
-const allCatsData = ref([
-  {
-    id: 'Mochi',
-    nama: 'Mochi',
-    gender: 'betina',
-    ras: 'persia',
-    umurTeks: '1 thn',
-    gambar: "/image/adopsi/kucing 1.png",
-    shelter:  {
-      nama: 'Rumah Kucing BDG',
-      lokasi: 'Bandung',
-      avatar: "/image/adopsi/image.png",
-    },
-    deskripsi: 'Mochi adalah kucing penyayang, lembut, dan cocok untuk keluarga kecil.',
+const allCatsData = ref([])
+// Fetch data from a mock API or local JSON file
+
+async function loadCats() {
+  const res = await axios.get("http://localhost:3000/api/kucing")
+
+  // Backend kamu hanya return field dasar
+  // Jadi kita map biar cocok dengan struktur front-end kamu
+ allCatsData.value = res.data.map(cat => ({
+  id: cat.id,
+  nama: "Kucing " + cat.id,
+  gender: cat.gender,
+  ras: cat.ras,
+  umurTeks: cat.usia + " thn",
+  gambar: "/image/" + cat.foto,
+  shelter: {
+    nama: "Shelter Default",
+    lokasi: "Tidak ada lokasi",
+    avatar: "/image/default-shelter.png"
   },
-  {
-    id: 'Leo',
-    nama: 'Leo',
-    gender: 'jantan',
-    ras: 'british',
-    umurTeks: '8 bln',
-    gambar: "/image/adopsi/kucing 2.png",
-    shelter: {
-      nama: 'Meow Shelter',
-      lokasi: 'Jakarta',
-      avatar: "/image/adopsi/image.png",
-    },
-    deskripsi: 'Leo aktif dan suka bermain, sangat cocok untuk pemilik yang energik.',
-  },
-  {
-    id: 'Kiko',
-    nama: 'Kiko',
-    gender: 'jantan',
-    ras: 'domestik',
-    umurTeks: '1.5 thn',
-    gambar: "/image/adopsi/kucing 3.png",
-    shelter: {
-      nama: 'Paw Friends',
-      lokasi: 'Yogyakarta',
-      avatar: "/image/adopsi/image.png",
-    },
-    deskripsi: 'Kiko mandiri dan penjelajah, namun manja bila sudah kenal.',
-  },
-])
+  deskripsi: cat.kondisi
+}));
+}
+
+
+loadCats()
 
 // --- 3. COMPUTED ---
 const filteredCats = computed(() => {

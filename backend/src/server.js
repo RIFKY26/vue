@@ -2,10 +2,14 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import dotenv from 'dotenv'
+import fastifyMysql from "@fastify/mysql"
 
 import kucingRoutes from './routes/kucingRoutes.js'
-import shelterRoutes from './routes/shelterRoutes.js'
-import adopsiRoutes from './routes/adopsiRoutes.js'
+import donasiRoutes from "./routes/donasiRoutes.js"
+import peringkatRoutes from "./routes/peringkatRoutes.js"
+import userRoutes from "./routes/userRoutes.js";
+// import shelterRoutes from './routes/shelterRoutes.js'
+// import adopsiRoutes from './routes/adopsiRoutes.js'
 
 dotenv.config()
 
@@ -15,9 +19,20 @@ await fastify.register(cors, {
   origin: 'http://localhost:5173',
 })
 
+fastify.register(fastifyMysql, {
+  promise: true,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
+})
+
+fastify.register(donasiRoutes, { prefix: "/api" })
 fastify.register(kucingRoutes, { prefix: '/api' })
-fastify.register(shelterRoutes, { prefix: '/api' })
-fastify.register(adopsiRoutes, { prefix: '/api' })
+fastify.register(peringkatRoutes, { prefix: "/api" })
+fastify.register(userRoutes, { prefix: "/api" });
+// fastify.register(shelterRoutes, { prefix: '/api' })
+// fastify.register(adopsiRoutes, { prefix: '/api' })
 
 const start = async () => {
   try {

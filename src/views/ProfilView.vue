@@ -221,136 +221,151 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useDarkMode } from '../composables/useDarkMode'
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useDarkMode } from "../composables/useDarkMode";
+import axios from "axios";
 
-const route = useRoute()
-const { isDarkMode, toggleDarkMode } = useDarkMode()
+const route = useRoute();
+const { isDarkMode, toggleDarkMode } = useDarkMode();
 
-// Tab aktif - cek query parameter untuk langsung ke tab pengaturan
-const activeTab = ref('aktivitas')
+const activeTab = ref("aktivitas");
 
-// Load tab dari query parameter saat component mount
-onMounted(() => {
-  if (route.query.tab === 'pengaturan') {
-    activeTab.value = 'pengaturan'
-  }
-})
-
-// Watch untuk perubahan route query
-watch(() => route.query.tab, (newTab) => {
-  if (newTab === 'pengaturan') {
-    activeTab.value = 'pengaturan'
-  }
-})
-
-// Data pengguna
+// -------------------------
+// DATA REF
+// -------------------------
 const userData = ref({
-  nama: "Shaq O'niel",
-  email: "shaq.oniel@example.com",
-  bio: "Pecinta kucing yang peduli dengan kesejahteraan hewan",
-  phone: "+62 812-3456-7890",
-  alamat: "Jl. Kucing No. 123, Jakarta",
-  avatar: "/image/peringkat/shaqonel.png",
-  totalPoin: 1257,
-  peringkat: 1,
-  poinAdopsi: 832,
-  poinLapor: 226,
-  poinDonasi: 199,
-  totalAdopsi: 12,
-  totalLapor: 8,
-  totalDonasi: 5
-})
+  nama: "",
+  email: "",
+  bio: "",
+  phone: "",
+  alamat: "",
+  avatar: "",
+  totalPoin: 0,
+  peringkat: 0,
+  poinAdopsi: 0,
+  poinLapor: 0,
+  poinDonasi: 0,
+  totalAdopsi: 0,
+  totalLapor: 0,
+  totalDonasi: 0,
+});
 
-// Data aktivitas
-const aktivitasData = ref([
-  {
-    id: 1,
-    type: 'adopsi',
-    icon: 'fa-paw',
-    title: 'Adopsi Kucing',
-    description: 'Anda berhasil mengadopsi kucing bernama Mochi',
-    time: '2 jam yang lalu',
-    points: 50
-  },
-  {
-    id: 2,
-    type: 'donasi',
-    icon: 'fa-hand-holding-dollar',
-    title: 'Donasi',
-    description: 'Donasi untuk Pakan Kucing',
-    time: '1 hari yang lalu',
-    points: 30
-  },
-  {
-    id: 3,
-    type: 'lapor',
-    icon: 'fa-flag',
-    title: 'Laporan',
-    description: 'Melaporkan kucing terlantar di Jl. Merdeka',
-    time: '3 hari yang lalu',
-    points: 20
-  },
-  {
-    id: 4,
-    type: 'adopsi',
-    icon: 'fa-paw',
-    title: 'Adopsi Kucing',
-    description: 'Anda berhasil mengadopsi kucing bernama Leo',
-    time: '1 minggu yang lalu',
-    points: 50
-  }
-])
+const aktivitasData = ref([]);
+const riwayatPoin = ref([]);
 
-// Data riwayat poin
-const riwayatPoin = ref([
-  {
-    id: 1,
-    type: 'adopsi',
-    icon: 'fa-paw',
-    description: 'Adopsi kucing bernama Mochi',
-    date: '15 Jan 2024',
-    points: 832
-  },
-  {
-    id: 2,
-    type: 'donasi',
-    icon: 'fa-hand-holding-dollar',
-    description: 'Donasi untuk Pakan Kucing',
-    date: '10 Jan 2024',
-    points: 199
-  },
-  {
-    id: 3,
-    type: 'lapor',
-    icon: 'fa-flag',
-    description: 'Melaporkan kucing terlantar',
-    date: '5 Jan 2024',
-    points: 226
-  }
-])
-
-// Pengaturan
 const settings = ref({
   notifikasiEmail: true,
   notifikasiAdopsi: true,
-  notifikasiDonasi: false
-})
+  notifikasiDonasi: false,
+});
 
-// Methods
+// -------------------------
+// FETCH DATA FROM BACKEND
+// -------------------------
+async function loadUser() {
+ const idUser = localStorage.getItem("id_user") || 3;
+
+
+  // --- GET PROFIL USER ---
+  const profil = await axios.get(`http://localhost:3000/api/users/${idUser}`);
+  const p = profil.data;
+
+  userData.value = {
+    nama: p.nama,
+    email: p.email,
+    bio: p.bio,
+    phone: p.phone,
+    alamat: p.alamat,
+    avatar: p.foto, // DB: foto
+    totalPoin: p.total_poin,
+    peringkat: 1,
+    poinAdopsi: p.poinAdopsi,
+    poinLapor: p.poinLapor,
+    poinDonasi: p.poinDonasi,
+    totalAdopsi: p.poinAdopsi > 0 ? 12 : 0,
+    totalLapor: p.poinLapor > 0 ? 8 : 0,
+    totalDonasi: p.poinDonasi > 0 ? 5 : 0,
+  };
+
+  // --- GET RIWAYAT / AKTIVITAS ---
+  const history = await axios.get(
+    `http://localhost:3000/api/users/${idUser}/poin-history`
+  );
+
+  riwayatPoin.value = history.data.map((h) => ({
+    id: h.id_history,
+    type:
+      h.id_poin === 1
+        ? "adopsi"
+        : h.id_poin === 2
+        ? "donasi"
+        : "lapor",
+    icon:
+      h.id_poin === 1
+        ? "fa-paw"
+        : h.id_poin === 2
+        ? "fa-hand-holding-dollar"
+        : "fa-flag",
+    description: h.deskripsi,
+    date: h.tanggal,
+    points: h.poin,
+  }));
+
+  // aktivitas (pakai format yang sama)
+  aktivitasData.value = riwayatPoin.value.map((h) => ({
+    id: h.id,
+    type: h.type,
+    icon: h.icon,
+    title:
+      h.type === "adopsi"
+        ? "Adopsi Kucing"
+        : h.type === "donasi"
+        ? "Donasi"
+        : "Laporan",
+    description: h.description,
+    time: h.date,
+    points: h.points,
+  }));
+}
+
+// -------------------------
+// MOUNT
+// -------------------------
+onMounted(() => {
+  if (route.query.tab === "pengaturan") {
+    activeTab.value = "pengaturan";
+  }
+
+  loadUser();
+});
+
+// WATCH TAB
+watch(
+  () => route.query.tab,
+  (newTab) => {
+    if (newTab === "pengaturan") {
+      activeTab.value = "pengaturan";
+    }
+  }
+);
+
+// -------------------------
+// METHODS
+// -------------------------
 function editProfile() {
-  activeTab.value = 'pengaturan'
+  activeTab.value = "pengaturan";
 }
 
 function editAvatar() {
-  alert('Fitur edit avatar akan segera tersedia!')
+  alert("Fitur edit avatar segera tersedia!");
 }
 
 function saveSettings() {
-  alert('Pengaturan berhasil disimpan!')
+  alert("Pengaturan berhasil disimpan!");
 }
 </script>
+
 
 <style scoped>
 .profile-container {
