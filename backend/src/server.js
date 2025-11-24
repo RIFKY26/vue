@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import fastifyMysql from "@fastify/mysql"
 
 import kucingRoutes from './routes/kucingRoutes.js'
-import donasiRoutes from "./routes/donasiRoutes.js"
+// import donasiRoutes from "./routes/donasiRoutes.js"
 import peringkatRoutes from "./routes/peringkatRoutes.js"
 import userRoutes from "./routes/userRoutes.js";
 import rawatKucingRoutes from './routes/rawatKucingRoutes.js';
@@ -28,7 +28,7 @@ fastify.register(fastifyMysql, {
   database: process.env.DB_NAME
 })
 
-fastify.register(donasiRoutes, { prefix: "/api" })
+// fastify.register(donasiRoutes, { prefix: "/api" })
 fastify.register(kucingRoutes, { prefix: '/api' })
 fastify.register(peringkatRoutes, { prefix: "/api" })
 fastify.register(userRoutes, { prefix: "/api" });
