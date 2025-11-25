@@ -1,10 +1,6 @@
-import kucingService from '../services/kucingService.js'
+import KucingModel from "../models/kucingModel.js";
 
-export const getSemuaKucing = async (req, reply) => {
-  reply.send(await kucingService.getAll())
-}
-
-export const tambahKucing = async (req, reply) => {
-  const data = await kucingService.create(req.body)
-  reply.send(data)
+export async function getAllKucing(req, reply) {
+  const data = await KucingModel.getAll();
+  return data;
 }

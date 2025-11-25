@@ -166,17 +166,17 @@ async function loadCats() {
   // Jadi kita map biar cocok dengan struktur front-end kamu
  allCatsData.value = res.data.map(cat => ({
   id: cat.id,
-  nama: "Kucing " + cat.id,
-  gender: cat.gender,
-  ras: cat.ras,
+  nama: cat.headline,
+  gender: cat.gender?.toLowerCase(), // biar match "jantan/betina"
+  ras: cat.ras?.toLowerCase(),
   umurTeks: cat.usia + " thn",
-  gambar: "/image/" + cat.foto,
+  gambar: "/image/" + cat.foto,  
+  deskripsi: cat.deskripsi,
   shelter: {
-    nama: "Shelter Default",
-    lokasi: "Tidak ada lokasi",
-    avatar: "/image/default-shelter.png"
-  },
-  deskripsi: cat.kondisi
+    nama: cat.nama_shelter || "Tidak ada nama shelter",
+    lokasi: cat.shelter_lokasi || "Tidak ada lokasi",
+    avatar: "/image/" + (cat.shelter_foto || "default-shelter.png")
+  }
 }));
 }
 

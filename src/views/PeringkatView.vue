@@ -123,62 +123,67 @@ onMounted(async () => {
     .sort((a, b) => b.total_poin - a.total_poin)
     .map((item, index) => ({
       id: item.id_user,
-      nama: item.username,
-      rank: index + 1,
-      avatar: item.avatar || defaultAvatar,
 
+      // pakai nama dari adopter
+      nama: item.nama || item.username,
+
+      rank: index + 1,
+
+      // avatar dari tabel adopter atau default
+      avatar: item.avatar ? item.avatar : defaultAvatar,
+
+      totalPoin: item.total_poin ?? 0,
       poinAdopsi: item.poinAdopsi ?? 0,
       poinLapor: item.poinLapor ?? 0,
-      poinDonasi: item.poinDonasi ?? 0,
-      totalPoin: item.total_poin ?? 0,
-
-      tindakan: item.tindakan || ""
+      poinDonasi: item.poinDonasi ?? 0
     }))
 })
 
-const topUsers = computed(() => {
-  if (leaderboardData.value.length < 3) return [{}, {}, {}]
-  return [
-    leaderboardData.value[0],
-    leaderboardData.value[1],
-    leaderboardData.value[2]
-  ]
-})
 
+// TOP 3
+const topUsers = computed(() => {
+  const data = leaderboardData.value;
+
+  return [
+    data[0] || { nama: "", avatar: defaultAvatar, totalPoin: 0, poinAdopsi: 0, poinLapor: 0, poinDonasi: 0 },
+    data[1] || { nama: "", avatar: defaultAvatar, totalPoin: 0, poinAdopsi: 0, poinLapor: 0, poinDonasi: 0 },
+    data[2] || { nama: "", avatar: defaultAvatar, totalPoin: 0, poinAdopsi: 0, poinLapor: 0, poinDonasi: 0 }
+  ];
+});
+
+
+// ==== MODAL RIWAYAT ====
 const isModalOpen = ref(false)
 const modalTitle = ref("")
 const historyData = ref([])
 
 async function openModal(id, name) {
   modalTitle.value = `Riwayat Poin untuk ${name}`
-
   isModalOpen.value = true
   historyData.value = []
 
-  try {
-    const res = await axios.get(`http://localhost:3000/api/users/${id}/poin-history`)
-
-    historyData.value = res.data.map(item => ({
-      description: item.deskripsi,
-      points: item.poin,
-      icon:
-        item.id_poin === 1 ? "fa-paw" :
-        item.id_poin === 2 ? "fa-hand-holding-dollar" :
-        "fa-flag",
-      type:
-        item.id_poin === 1 ? "adopsi" :
-        item.id_poin === 2 ? "donasi" :
-        "lapor"
-    }))
-  } catch (err) {
-    console.error("Gagal load histori:", err)
-  }
+  const res = await axios.get(`http://localhost:3000/api/users/${id}/poin-history`)
+  historyData.value = res.data.map(item => ({
+    description: item.deskripsi,
+    points: item.poin,
+    icon:
+      item.id_poin === 1 ? "fa-paw" :
+      item.id_poin === 2 ? "fa-hand-holding-dollar" :
+      "fa-flag",
+    type:
+      item.id_poin === 1 ? "adopsi" :
+      item.id_poin === 2 ? "donasi" :
+      "lapor"
+  }))
 }
 
 function closeModal() {
   isModalOpen.value = false
 }
 </script>
+
+
+
 
 
 <style scoped>

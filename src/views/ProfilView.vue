@@ -261,72 +261,81 @@ const settings = ref({
 });
 
 // -------------------------
-// FETCH DATA FROM BACKEND
+// FETCH DATA USER
 // -------------------------
 async function loadUser() {
- const idUser = localStorage.getItem("id_user") || 3;
+  const idUser = localStorage.getItem("id_user") || 1;
 
+  try {
+    // AMBIL DATA PROFIL
+    const res = await axios.get(`http://localhost:3000/api/users/${idUser}`);
+    const p = res.data;
 
-  // --- GET PROFIL USER ---
-  const profil = await axios.get(`http://localhost:3000/api/users/${idUser}`);
-  const p = profil.data;
+    userData.value = {
+      nama: p.nama,
+      email: p.email,
+      bio: p.bio,
+      phone: p.phone,
+      alamat: p.alamat,
 
-  userData.value = {
-    nama: p.nama,
-    email: p.email,
-    bio: p.bio,
-    phone: p.phone,
-    alamat: p.alamat,
-    avatar: p.foto, // DB: foto
-    totalPoin: p.totalPoin, 
-    peringkat: 1,
-    poinAdopsi: p.poinAdopsi,
-    poinLapor: p.poinLapor,
-    poinDonasi: p.poinDonasi,
-    totalAdopsi: p.poinAdopsi > 0 ? 12 : 0,
-    totalLapor: p.poinLapor > 0 ? 8 : 0,
-    totalDonasi: p.poinDonasi > 0 ? 5 : 0,
-  };
+      avatar: p.foto
+        ? `http://localhost:3000/image/${p.foto}`
+        : "/image/default-user.png",
 
-  // --- GET RIWAYAT / AKTIVITAS ---
-  const history = await axios.get(
-    `http://localhost:3000/api/users/${idUser}/poin-history`
-  );
+      totalPoin: Number(p.totalPoin) || 0,
+      peringkat: 0,
 
-  riwayatPoin.value = history.data.map((h) => ({
-    id: h.id_history,
-    type:
-      h.id_poin === 1
-        ? "adopsi"
-        : h.id_poin === 2
-        ? "donasi"
-        : "lapor",
-    icon:
-      h.id_poin === 1
-        ? "fa-paw"
-        : h.id_poin === 2
-        ? "fa-hand-holding-dollar"
-        : "fa-flag",
-    description: h.deskripsi,
-    date: h.tanggal,
-    points: h.poin,
-  }));
+      poinAdopsi: Number(p.poinAdopsi) || 0,
+      poinDonasi: Number(p.poinDonasi) || 0,
+      poinLapor: Number(p.poinLapor) || 0,
 
-  // aktivitas (pakai format yang sama)
-  aktivitasData.value = riwayatPoin.value.map((h) => ({
-    id: h.id,
-    type: h.type,
-    icon: h.icon,
-    title:
-      h.type === "adopsi"
-        ? "Adopsi Kucing"
-        : h.type === "donasi"
-        ? "Donasi"
-        : "Laporan",
-    description: h.description,
-    time: h.date,
-    points: h.points,
-  }));
+      totalAdopsi: Number(p.totalAdopsi) || 0,
+      totalDonasi: Number(p.totalDonasi) || 0,
+      totalLapor: Number(p.totalLapor) || 0,
+    };
+
+    // AMBIL RIWAYAT POIN
+    const history = await axios.get(
+      `http://localhost:3000/api/users/${idUser}/poin-history`
+    );
+
+    riwayatPoin.value = history.data.map((h) => ({
+      id: h.id_history,
+      type:
+        h.id_poin === 1
+          ? "adopsi"
+          : h.id_poin === 2
+          ? "donasi"
+          : "lapor",
+      icon:
+        h.id_poin === 1
+          ? "fa-paw"
+          : h.id_poin === 2
+          ? "fa-hand-holding-dollar"
+          : "fa-flag",
+      description: h.deskripsi,
+      date: h.tanggal,
+      points: h.poin,
+    }));
+
+    // AKTIVITAS = riwayatPoin
+    aktivitasData.value = riwayatPoin.value.map((h) => ({
+      id: h.id,
+      type: h.type,
+      icon: h.icon,
+      title:
+        h.type === "adopsi"
+          ? "Adopsi Kucing"
+          : h.type === "donasi"
+          ? "Donasi"
+          : "Laporan",
+      description: h.description,
+      time: h.date,
+      points: h.points,
+    }));
+  } catch (err) {
+    console.error("Gagal load user:", err);
+  }
 }
 
 // -------------------------
@@ -336,11 +345,12 @@ onMounted(() => {
   if (route.query.tab === "pengaturan") {
     activeTab.value = "pengaturan";
   }
-
   loadUser();
 });
 
-// WATCH TAB
+// -------------------------
+// WATCH ROUTE TAB
+// -------------------------
 watch(
   () => route.query.tab,
   (newTab) => {
@@ -365,6 +375,7 @@ function saveSettings() {
   alert("Pengaturan berhasil disimpan!");
 }
 </script>
+
 
 
 <style scoped>

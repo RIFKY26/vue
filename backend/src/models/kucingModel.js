@@ -1,27 +1,30 @@
-import pool from '../config/database.js'
+import db from "../config/database.js"; // atau fastify.mysql, tergantung setup kamu
 
-export const getKucingAll = async () => {
-  const [rows] = await pool.query(`
-    SELECT k.id_kucing, k.usia, k.foto,
-           jk.jenis_kucing, jk.id_jenis_kucing,
-           jg.jenis_kelamin, jg.id_jenis_kelamin,
-           kk.kondisi_kucing, kk.id_kondisi_kucing
-    FROM kucing k
-    LEFT JOIN jenis_kucing jk ON k.id_jenis_kucing = jk.id_jenis_kucing
-    LEFT JOIN jenis_kelamin jg ON k.id_jenis_kelamin = jg.id_jenis_kelamin
-    LEFT JOIN kondisi_kucing kk ON k.id_kondisi_kucing = kk.id_kondisi_kucing
-  `)
-  return rows
+class KucingModel {
+  static async getAll() {
+    const [rows] = await db.query(`
+      SELECT 
+        a.id_adopsi AS id,
+        a.headline AS nama,
+        a.lokasi,
+        a.informasi AS deskripsi,
+        a.foto_adopsi AS foto,
+        a.usia,
+        jk.jenis_kucing AS ras,
+        jg.jenis_kelamin AS gender,
+        kc.kondisi_kucing AS kondisi,
+        s.nama_shelter,
+        s.lokasi AS shelter_lokasi,
+        s.foto AS shelter_foto
+      FROM adopsi a
+      LEFT JOIN jenis_kucing jk ON a.jenis_kucing = jk.id_jenis_kucing
+      LEFT JOIN jenis_kelamin jg ON a.jenis_kelamin = jg.id_jenis_kelamin
+      LEFT JOIN kondisi_kucing kc ON a.kondisi_kucing = kc.id_kondisi_kucing
+      LEFT JOIN shelter s ON s.id_shelter = a.id_shelter;
+    `);
+
+    return rows;
+  }
 }
 
-export const createKucing = async (data) => {
-  const { id_jenis_kucing, id_jenis_kelamin, id_kondisi_kucing, usia, foto } = data
-
-  const [result] = await pool.query(
-    `INSERT INTO kucing (id_jenis_kucing, id_jenis_kelamin, id_kondisi_kucing, usia, foto)
-     VALUES (?, ?, ?, ?, ?)`,
-    [id_jenis_kucing, id_jenis_kelamin, id_kondisi_kucing, usia, foto],
-  )
-
-  return { id_kucing: result.insertId, ...data }
-}
+export default KucingModel;

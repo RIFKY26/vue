@@ -183,35 +183,43 @@ onMounted(async () => {
 
     allCatsData.value = cats.map(c => ({
       id: c.id_kucing,
-      name: c.nama_kucing || "Tanpa Nama",
+
+      // NAMA KUCING SESUAI BACKEND
+      name: c.nama_kucing,  
       tag: c.kondisi,
+
       gender: c.jenis_kelamin,
       breed: c.jenis_kucing,
       age: c.usia,
 
-      // FIX PATH GAMBAR (WAJIB)
-      image: new URL(`../../assets/img/kucing/${c.foto}`, import.meta.url).href,
+      // FOTO SESUAI DB
+      image: `http://localhost:3000/image/${c.foto}`,
 
       reminders: c.reminders,
       activities: c.activities
     }))
 
-    console.log("HASIL LOADING:", allCatsData.value)
   } catch (err) {
     console.error("ERROR LOAD:", err)
   }
 })
 
+
 // --- 3. CURRENT CAT ---
 const currentCat = computed(() => {
   if (!allCatsData.value.length) return {}
-  const cat = allCatsData.value[currentCatIndex.value];
+
+  const cat = allCatsData.value[currentCatIndex.value]
 
   return {
     ...cat,
-    genderIcon: cat.gender === 'Jantan' ? 'fa-solid fa-mars' : 'fa-solid fa-venus'
-  };
-});
+    genderIcon:
+      cat.gender && cat.gender.toLowerCase() === "jantan"
+        ? "fa-solid fa-mars"
+        : "fa-solid fa-venus",
+  }
+})
+
 
 // --- 4. BUTTON NEXT / PREV ---
 function nextCat() {
