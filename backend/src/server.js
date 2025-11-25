@@ -17,8 +17,23 @@ dotenv.config()
 const fastify = Fastify({ logger: true })
 
 await fastify.register(cors, {
-  origin: 'http://localhost:5173',
-})
+  origin: (origin, cb) => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "http://localhost:5174",
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      return cb(null, true);
+    }
+
+    return cb(new Error("Not allowed by CORS"), false);
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+  allowedHeaders: ["content-type", "authorization"],
+  exposedHeaders: ["content-type"],
+  credentials: true,
+});
 
 await fastify.register(fastifyMysql, {
   promise: true,

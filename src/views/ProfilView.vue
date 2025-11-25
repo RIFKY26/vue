@@ -157,8 +157,9 @@
                 <label>Alamat</label>
                 <textarea v-model="userData.alamat" placeholder="Alamat lengkap" rows="2"></textarea>
               </div>
-              <button class="btn-save" @click="saveSettings">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+              <button class="btn-save" @click="saveSettings" :disabled="isSaving">
+                <i class="fa-solid fa-floppy-disk"></i>
+                {{ isSaving ? "Menyimpan..." : "Simpan Perubahan" }}
               </button>
             </div>
           </div>
@@ -236,6 +237,7 @@ const activeTab = ref("aktivitas");
 // -------------------------
 const userData = ref({
   nama: "",
+  username: "",
   email: "",
   bio: "",
   phone: "",
@@ -253,6 +255,7 @@ const userData = ref({
 
 const aktivitasData = ref([]);
 const riwayatPoin = ref([]);
+const isSaving = ref(false);
 
 const settings = ref({
   notifikasiEmail: true,
@@ -271,19 +274,22 @@ async function loadUser() {
     const res = await axios.get(`http://localhost:3000/api/users/${idUser}`);
     const p = res.data;
 
+    const fallbackNama = p.nama || p.username || "";
+
     userData.value = {
-      nama: p.nama,
-      email: p.email,
-      bio: p.bio,
-      phone: p.phone,
-      alamat: p.alamat,
+      nama: fallbackNama,
+      username: p.username || fallbackNama,
+      email: p.email || "",
+      bio: p.bio || "",
+      phone: p.phone || "",
+      alamat: p.alamat || "",
 
       avatar: p.foto
         ? `http://localhost:3000/image/${p.foto}`
         : "/image/default-user.png",
 
       totalPoin: Number(p.totalPoin) || 0,
-      peringkat: 0,
+      peringkat: Number(p.peringkat) || 1,
 
       poinAdopsi: Number(p.poinAdopsi) || 0,
       poinDonasi: Number(p.poinDonasi) || 0,
@@ -293,7 +299,7 @@ async function loadUser() {
       totalDonasi: Number(p.totalDonasi) || 0,
       totalLapor: Number(p.totalLapor) || 0,
     };
-
+    
     // AMBIL RIWAYAT POIN
     const history = await axios.get(
       `http://localhost:3000/api/users/${idUser}/poin-history`
@@ -302,15 +308,15 @@ async function loadUser() {
     riwayatPoin.value = history.data.map((h) => ({
       id: h.id_history,
       type:
-        h.id_poin === 1
+        h.id_poin === 2
           ? "adopsi"
-          : h.id_poin === 2
+          : h.id_poin === 1
           ? "donasi"
           : "lapor",
       icon:
-        h.id_poin === 1
+        h.id_poin === 2
           ? "fa-paw"
-          : h.id_poin === 2
+          : h.id_poin === 1
           ? "fa-hand-holding-dollar"
           : "fa-flag",
       description: h.deskripsi,
@@ -365,15 +371,64 @@ watch(
 // -------------------------
 function editProfile() {
   activeTab.value = "pengaturan";
+
+  // tunggu DOM update lalu scroll
+  setTimeout(() => {
+    const el = document.querySelector(".profile-tabs");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }, 100);
 }
 
 function editAvatar() {
   alert("Fitur edit avatar segera tersedia!");
 }
 
-function saveSettings() {
-  alert("Pengaturan berhasil disimpan!");
+async function saveSettings() {
+  let idUser = localStorage.getItem("id_user");
+
+// kalau id_user belum ada → pakai default dari DB (misal user id 1)
+if (!idUser) {
+  idUser = 1;
 }
+
+
+  const payload = {
+    nama: (userData.value.nama || "").trim(),
+    email: (userData.value.email || "").trim(),
+    bio: (userData.value.bio || "").trim(),
+    phone: (userData.value.phone || "").trim(),
+    alamat: (userData.value.alamat || "").trim(),
+  };
+
+  if (!payload.nama) {
+    alert("Nama lengkap wajib diisi.");
+    return;
+  }
+
+  if (!payload.email) {
+    alert("Email wajib diisi.");
+    return;
+  }
+
+  if (isSaving.value) return;
+  isSaving.value = true;
+
+  try {
+    await axios.put(
+      `http://localhost:3000/api/users/${idUser}/update-profile`,
+      payload
+    );
+
+    alert("Profil berhasil diperbarui!");
+    await loadUser(); // refresh data
+  } catch (err) {
+    console.error(err);
+    alert("Gagal memperbarui profil.");
+  } finally {
+    isSaving.value = false;
+  }
+}
+
 </script>
 
 
@@ -789,6 +844,11 @@ function saveSettings() {
 
 .btn-save:hover {
   background-color: var(--blue-dark);
+}
+
+.btn-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .settings-list {
