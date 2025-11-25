@@ -1,7 +1,7 @@
 <template>
   <main class="login-container">
     <div class="left-panel" :style="{ '--bg-image': `url(${backgroundImage})` }">
-      <img :src="kucing" alt="Kucing Lucu" class="cat-illustration">
+      <img :src="kucing" alt="Kucing Lucu" class="cat-illustration" />
       <h2 class="tagline">Mulailah bergabung bersama pecinta kucing</h2>
     </div>
 
@@ -12,13 +12,13 @@
 
         <!-- FORM LOGIN -->
         <form @submit.prevent="handleLogin" class="login-form">
-
           <div class="input-group">
             <i class="fa-solid fa-at icon"></i>
             <input
-              type="email"
-              v-model="formData.email"
-              placeholder="Email"
+              type="text"
+              v-model="formData.identifier"
+              placeholder="Email atau Username"
+              autocomplete="username"
               required
             />
           </div>
@@ -40,11 +40,8 @@
 
           <button type="submit" class="login-button" :disabled="isLoading">
             <span v-if="!isLoading">Masuk</span>
-            <span v-else>
-              <i class="fa-solid fa-spinner fa-spin"></i> Memproses...
-            </span>
+            <span v-else> <i class="fa-solid fa-spinner fa-spin"></i> Memproses... </span>
           </button>
-
         </form>
 
         <div class="links-section">
@@ -52,72 +49,82 @@
             Belum punya akun? <router-link to="/register-user">Daftar</router-link>
           </p>
         </div>
-
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import "@/assets/css/auth.css";
-import kucing from "@/assets/images/kucing.svg";
-import backgroundImage from "@/assets/images/background.jpg";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import '@/assets/css/auth.css'
+import kucing from '@/assets/images/kucing.svg'
+import backgroundImage from '@/assets/images/background.jpg'
 
-const router = useRouter();
+const router = useRouter()
 
 const formData = ref({
-  email: "",
-  password: ""
-});
+  identifier: '',
+  password: '',
+})
 
-const showPassword = ref(false);
-const isLoading = ref(false);
+const showPassword = ref(false)
+const isLoading = ref(false)
 
 function togglePassword() {
-  showPassword.value = !showPassword.value;
+  showPassword.value = !showPassword.value
 }
 // ... imports ...
-import api from "@/services/api";
+import api from '@/services/api'
 
 async function handleLogin() {
-  if (!formData.value.email || !formData.value.password) {
-    alert("Email dan password wajib diisi!");
-    return;
+  if (!formData.value.identifier || !formData.value.password) {
+    alert('Email/username dan password wajib diisi!')
+    return
   }
 
-  isLoading.value = true;
+  isLoading.value = true
 
   try {
     // Endpoint tetap /auth/login
     // Payload key 'username' diisi dengan email (sesuai logika backend yang menerima email OR username)
-    const res = await api.post("/auth/login", {
-      username: formData.value.email,
-      password: formData.value.password
-    });
+    const res = await api.post('/auth/login', {
+      username: formData.value.identifier,
+      password: formData.value.password,
+    })
 
     // Simpan token
-    localStorage.setItem("token", res.data.token);
+    localStorage.setItem('token', res.data.token)
 
-    // Simpan user object (sekarang berisi id_user, nama, role, dll)
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+    // Simpan user object (kompatibel dengan berbagai struktur backend)
+    const userData = res.data.user || {}
+    const normalizedUser = {
+      id: userData.id ?? userData.id_user ?? null,
+      username: userData.username || formData.value.identifier,
+      email: userData.email || null,
+      role: (userData.role || '').toLowerCase(),
+      name: userData.name || userData.nama || userData.username || '',
+      phone: userData.phone || null,
+      foto: userData.foto || null,
+    }
+    localStorage.setItem('user', JSON.stringify(normalizedUser))
 
-    alert("Login berhasil!");
+    alert('Login berhasil!')
 
     // Cek Role untuk redirect (Opsional, jika admin punya halaman beda)
-    if(res.data.user.role === 'Admin') {
-        router.push("/admin/dashboard");
+    const role = normalizedUser.role
+    if (role === 'admin') {
+      router.push('/admin/dashboard')
+    } else if (role === 'shelter') {
+      router.push('/home') // TODO: arahkan ke dashboard shelter jika tersedia
     } else {
-        router.push("/home");
+      router.push('/home')
     }
-
   } catch (error) {
-    const msg = error.response?.data?.error || error.response?.data?.message || "Login gagal";
-    alert(msg);
+    const msg = error.response?.data?.error || error.response?.data?.message || 'Login gagal'
+    alert(msg)
   }
 
-  isLoading.value = false;
+  isLoading.value = false
 }
-
 </script>

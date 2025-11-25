@@ -1,20 +1,24 @@
-import userController from "../controllers/userController.js";
+import {
+  getUserProfile,
+  getPoinHistory,
+} from "../controllers/userController.js";
 
-async function userRoutes(fastify, options) {
-  // GET semua user
-  fastify.get("/users", userController.getAllUsers);
+export default async function userRoutes(fastify, opts) {
+  console.log("userRoutes LOADED!");
 
-  // GET user by ID
-  fastify.get("/users/:id", userController.getUserById);
+  // GET profil user
+  fastify.get("/users/:id", async (req, reply) => {
+    const data = await getUserProfile(fastify, req.params.id);
 
-  // UPDATE user
-  fastify.put("/users/:id", userController.updateUser);
+    if (!data) {
+      return reply.code(404).send({ message: "User tidak ditemukan" });
+    }
 
-  // DELETE user
-  fastify.delete("/users/:id", userController.deleteUser);
+    return data;
+  });
 
-  // GET profile berdasarkan token (user sedang login)
-  fastify.get("/user/profile", userController.getProfile);
+  // GET riwayat poin
+  fastify.get("/users/:id/poin-history", async (req) => {
+    return await getPoinHistory(fastify, req.params.id);
+  });
 }
-
-export default userRoutes;

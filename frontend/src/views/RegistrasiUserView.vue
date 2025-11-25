@@ -21,7 +21,17 @@
               type="email"
               v-model="formData.email"
               placeholder="Email"
+              autocomplete="email"
               required
+            />
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-id-badge icon"></i>
+            <input
+              type="text"
+              v-model="formData.username"
+              placeholder="Username (opsional, otomatis pakai email jika kosong)"
             />
           </div>
 
@@ -40,9 +50,18 @@
             <input
               type="text"
               v-model="formData.name"
-              placeholder="Nama"
+              placeholder="Nama Lengkap / Nama Shelter"
               required
             />
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-users icon"></i>
+            <select v-model="formData.role" required>
+              <option disabled value="">Pilih tipe akun</option>
+              <option value="Adopter">Adopter (pencari adopsi)</option>
+              <option value="Shelter">Shelter / Penyelamat</option>
+            </select>
           </div>
 
           <div class="input-group password-group">
@@ -105,8 +124,10 @@ const router = useRouter();
 
 const formData = ref({
   email: "",
+  username: "",
   phone: "",
   name: "",
+  role: "Adopter",
   password: "",
   confirmPassword: ""
 });
@@ -126,8 +147,14 @@ function togglePassword2() {
 import api from "@/services/api";
 
 async function handleRegister() {
-  if (!formData.value.email || !formData.value.phone || !formData.value.name ||
-      !formData.value.password || !formData.value.confirmPassword) {
+  if (
+    !formData.value.email ||
+    !formData.value.phone ||
+    !formData.value.name ||
+    !formData.value.role ||
+    !formData.value.password ||
+    !formData.value.confirmPassword
+  ) {
     alert("Harap lengkapi semua field");
     return;
   }
@@ -141,13 +168,17 @@ async function handleRegister() {
 
   try {
     // Kita gunakan email sebagai username default jika user tidak menginput username terpisah
-    await api.post("/auth/signup", {
-      username: formData.value.email,
-      email: formData.value.email,
+    const payload = {
+      email: formData.value.email.trim(),
+      username:
+        formData.value.username.trim() || formData.value.email.trim(),
       password: formData.value.password,
-      phone: formData.value.phone,
-      name: formData.value.name
-    });
+      phone: formData.value.phone.trim(),
+      name: formData.value.name.trim(),
+      role: formData.value.role
+    };
+
+    await api.post("/auth/signup", payload);
 
     alert("Registrasi berhasil! Silakan login");
     router.push("/login-user");

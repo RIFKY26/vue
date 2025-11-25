@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import laporanRoutes from "./src/routes/laporanRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import donasiRoutes from "./src/routes/donasiRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 // import kucingRoutes from "./src/routes/kucingRoutes.js";
 // import shelterRoutes from "./src/routes/shelterRoutes.js";
 // import adopsiRoutes from "./src/routes/adopsiRoutes.js";
@@ -69,6 +70,7 @@ await fastify.register(fastifyStatic, {
 fastify.register(laporanRoutes, { prefix: "/api" });
 fastify.register(authRoutes, { prefix: "/api" });
 fastify.register(donasiRoutes, { prefix: "/api" });
+fastify.register(userRoutes, { prefix: "/api" });
 
 // Route lainnya (Uncomment jika file sudah siap)
 // fastify.register(kucingRoutes, { prefix: "/api" });

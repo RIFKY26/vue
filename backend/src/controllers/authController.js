@@ -40,9 +40,9 @@ export default {
       // 4. INSERT ke tabel USER (Data Login)
       // Perhatikan: Phone tidak dimasukkan ke user, karena permintaan Anda phone masuk ke adopter/shelter
       const [userResult] = await connection.query(
-        `INSERT INTO user (username, email, password, role, nama, foto) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [username, email, hashedPassword, userRole, name, "default.jpg"]
+        `INSERT INTO user (username, email, password, role) 
+         VALUES (?, ?, ?, ?)`,
+        [username, email, hashedPassword, userRole]
       );
 
       const newUserId = userResult.insertId;

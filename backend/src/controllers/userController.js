@@ -1,84 +1,27 @@
-import db from "../database/db.js";
-import jwt from "jsonwebtoken";
+import UserModel from "../models/UserModel.js";
 
-export default {
-  // GET semua user
-  async getAllUsers(req, reply) {
-    try {
-      const [rows] = await db.query(
-        "SELECT adopter_id, nama, email, phone FROM adopter"
-      );
-      return rows;
-    } catch (error) {
-      reply.code(500).send({ error: error.message });
-    }
-  },
+export async function getUserProfile(fastify, id) {
+  const db = fastify.mysql;
 
-  // GET user by ID
-  async getUserById(req, reply) {
-    try {
-      const { id } = req.params;
-      const [rows] = await db.query(
-        "SELECT adopter_id, name, email, phone FROM adopter WHERE adopter_id = ?",
-        [id]
-      );
+  const user = await UserModel.getUserProfile(db, id);
+  if (!user) return null;
 
-      if (rows.length === 0) {
-        return reply.code(404).send({ error: "User tidak ditemukan" });
-      }
+  const totalPoin = await UserModel.getTotalPoin(db, id);
+  const stats = await UserModel.getPoinStats(db, id);
+  const counts = await UserModel.getActivityCounts(db, id);
 
-      return rows[0];
-    } catch (error) {
-      reply.code(500).send({ error: error.message });
-    }
-  },
+  return {
+    ...user,
+    totalPoin,
+    poinAdopsi: stats.poinAdopsi || 0,
+    poinDonasi: stats.poinDonasi || 0,
+    poinLapor: stats.poinLapor || 0,
+    totalAdopsi: counts.totalAdopsi || 0,
+    totalDonasi: counts.totalDonasi || 0,
+    totalLapor: counts.totalLapor || 0,
+  };
+}
 
-  // UPDATE user
-  async updateUser(req, reply) {
-    try {
-      const { id } = req.params;
-      const { name, phone } = req.body;
-
-      await db.query(
-        "UPDATE adopter SET name = ?, phone = ? WHERE adopter_id = ?",
-        [name, phone, id]
-      );
-
-      return { message: "User berhasil diperbarui" };
-    } catch (error) {
-      reply.code(500).send({ error: error.message });
-    }
-  },
-
-  // DELETE user
-  async deleteUser(req, reply) {
-    try {
-      const { id } = req.params;
-
-      await db.query("DELETE FROM adopter WHERE adopter_id = ?", [id]);
-      return { message: "User berhasil dihapus" };
-    } catch (error) {
-      reply.code(500).send({ error: error.message });
-    }
-  },
-
-  // GET PROFILE berdasarkan TOKEN
-  async getProfile(req, reply) {
-    try {
-      const header = req.headers.authorization;
-      if (!header) return reply.code(401).send({ error: "Token tidak ada" });
-
-      const token = header.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      const [rows] = await db.query(
-        "SELECT adopter_id, name, email, phone FROM adopter WHERE adopter_id = ?",
-        [decoded.userId]
-      );
-
-      return rows[0];
-    } catch (error) {
-      reply.code(401).send({ error: "Token tidak valid" });
-    }
-  },
-};
+export async function getPoinHistory(fastify, id) {
+  return await UserModel.getPoinHistory(fastify.mysql, id);
+}
