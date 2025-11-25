@@ -20,7 +20,7 @@ await fastify.register(cors, {
   origin: 'http://localhost:5173',
 })
 
-fastify.register(fastifyMysql, {
+await fastify.register(fastifyMysql, {
   promise: true,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,

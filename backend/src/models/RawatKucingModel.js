@@ -1,27 +1,31 @@
 class RawatKucingModel {
   // GET list kucing
-  static async getAllKucing(db) {
-    const query = `
-      SELECT 
-        k.id_kucing,
-        CONCAT('Kucing ', k.id_kucing) AS nama_kucing,
-        k.usia,
-        'default-cat.png' AS foto,
-        jk.jenis_kucing,
-        jkel.jenis_kelamin,
-        kk.kondisi_kucing AS kondisi,
-        sf.sifat
-      FROM kucing k
-      JOIN jenis_kucing jk ON jk.id_jenis_kucing = k.id_jenis_kucing
-      JOIN jenis_kelamin jkel ON jkel.id_jenis_kelamin = k.id_jenis_kelamin
-      JOIN kondisi_kucing kk ON kk.id_kondisi_kucing = k.id_kondisi_kucing
-      JOIN sifat_kucing sf ON sf.id_sifat = k.id_sifat
-      ORDER BY k.id_kucing ASC;
-    `;
+ static async getAllKucing(db, idUser) {
+  const query = `
+    SELECT 
+      k.id_kucing,
+      k.nama_kucing,
+      k.usia,
+      jk.jenis_kucing,
+      jkel.jenis_kelamin,
+      kk.kondisi_kucing AS kondisi,
+      sf.sifat
+    FROM kucing k
+    JOIN adopter a ON a.id_adopter = k.id_adopter
+    JOIN user u ON u.id_user = a.id_user
+    JOIN jenis_kucing jk ON jk.id_jenis_kucing = k.id_jenis_kucing
+    JOIN jenis_kelamin jkel ON jkel.id_jenis_kelamin = k.id_jenis_kelamin
+    JOIN kondisi_kucing kk ON kk.id_kondisi_kucing = k.id_kondisi_kucing
+    JOIN sifat_kucing sf ON sf.id_sifat = k.id_sifat
+    WHERE u.id_user = ?
+    ORDER BY k.id_kucing;
+  `;
 
-    const [rows] = await db.query(query);
-    return rows;
-  }
+  const [rows] = await db.query(query, [idUser]);
+  return rows;
+}
+
+
 
   // GET reminders per kucing
   static async getReminders(db, id) {
