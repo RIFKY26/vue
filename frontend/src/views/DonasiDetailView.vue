@@ -160,7 +160,7 @@ onMounted(() => {
 
 const goToPayment = () => {
   // Arahkan ke halaman pembayaran dengan ID donasi
-  router.push(`/donasi/bayar/${campaign.value.id_donasi}`);
+  router.push(`/pembayaran/${campaign.value.id_donasi}`);
 };
 
 // Helpers
