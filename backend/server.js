@@ -2,56 +2,91 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
-import staticFiles from "@fastify/static"; // <--- PENTING
+import fastifyStatic from "@fastify/static";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs"; // <--- WAJIB ADA: Untuk cek folder (existsSync)
 import { fileURLToPath } from "url";
 
 // Import Routes
-import kucingRoutes from "./src/routes/kucingRoutes.js";
-import shelterRoutes from "./src/routes/shelterRoutes.js";
-import adopsiRoutes from "./src/routes/adopsiRoutes.js";
-import authRoutes from "./src/routes/authRoutes.js";
+// Pastikan file-file ini ada di folder src/routes/
 import laporanRoutes from "./src/routes/laporanRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import donasiRoutes from "./src/routes/donasiRoutes.js";
+// import kucingRoutes from "./src/routes/kucingRoutes.js";
+// import shelterRoutes from "./src/routes/shelterRoutes.js";
+// import adopsiRoutes from "./src/routes/adopsiRoutes.js";
 
 dotenv.config();
 
-// Setup Path untuk ES Modules (Wajib agar folder terbaca)
+// Setup Path untuk ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const fastify = Fastify({ logger: true });
 
-// 1. Register CORS (Agar Frontend Vue bisa akses)
+// ==========================================
+// 1. REGISTER PLUGINS
+// ==========================================
+
+// CORS (Agar Frontend bisa akses backend)
 await fastify.register(cors, {
-  origin: true, // Atau "http://localhost:5173"
+  origin: true, // Atau ganti dengan domain frontend misal "http://localhost:5173"
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // <--- PENTING: Izinkan DELETE
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 });
 
-// 2. Register Multipart (Agar bisa upload file)
+// MULTIPART (Agar bisa upload file/foto)
 await fastify.register(multipart, {
-  attachFieldsToBody: true,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Batas 5MB
+  attachFieldsToBody: true, // Penting: field teks masuk ke req.body
+  limits: { fileSize: 5 * 1024 * 1024 }, // Batas file 5MB
 });
 
-// 3. Register Static (AGAR GAMBAR BISA DIBUKA DI BROWSER) <--- INI KUNCINYA
-await fastify.register(staticFiles, {
-  root: path.join(__dirname, "public"), // Folder fisik di komputer
-  prefix: "/public/", // URL akses di browser
+// STATIC FILES (Agar gambar bisa diakses lewat URL)
+const publicPath = path.join(__dirname, "public");
+const laporanImgPath = path.join(__dirname, "public/image/laporan");
+
+// Cek dan buat folder jika belum ada (Mencegah error saat upload pertama kali)
+if (!fs.existsSync(publicPath)) {
+  fs.mkdirSync(publicPath, { recursive: true });
+}
+if (!fs.existsSync(laporanImgPath)) {
+  fs.mkdirSync(laporanImgPath, { recursive: true });
+}
+
+// Register plugin static
+await fastify.register(fastifyStatic, {
+  root: publicPath,
+  prefix: "/public/", // URL akses: http://localhost:3000/public/image/laporan/nama.jpg
 });
 
-// 4. Register Routes
-fastify.register(kucingRoutes, { prefix: "/api" });
-fastify.register(shelterRoutes, { prefix: "/api" });
-fastify.register(adopsiRoutes, { prefix: "/api" });
-fastify.register(authRoutes, { prefix: "/api" });
+// ==========================================
+// 2. REGISTER ROUTES
+// ==========================================
+
+// Prefix /api untuk semua route
 fastify.register(laporanRoutes, { prefix: "/api" });
+fastify.register(authRoutes, { prefix: "/api" });
+fastify.register(donasiRoutes, { prefix: "/api" });
 
+// Route lainnya (Uncomment jika file sudah siap)
+// fastify.register(kucingRoutes, { prefix: "/api" });
+// fastify.register(shelterRoutes, { prefix: "/api" });
+// fastify.register(adopsiRoutes, { prefix: "/api" });
+
+// Route Default untuk cek server
+fastify.get("/", async (request, reply) => {
+  return { hello: "Welcome to AdoptMeow API" };
+});
+
+// ==========================================
+// 3. START SERVER
+// ==========================================
 const start = async () => {
   try {
-    await fastify.listen({ port: process.env.PORT || 3000 });
-    console.log("Server berjalan...");
-    console.log(`- API: http://localhost:3000/api`);
-    console.log(`- Images: http://localhost:3000/public/image/adopsi/`);
+    await fastify.listen({ port: 3000 });
+    console.log("Server berjalan di http://localhost:3000");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

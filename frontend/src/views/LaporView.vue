@@ -23,8 +23,9 @@
     <section class="report-grid">
       <div v-for="lapor in laporanList" :key="lapor.id" class="report-card">
         <img
-          :src="getImageUrl(lapor.image || lapor.foto)"
+          :src="getImageUrl(lapor.foto_lapor)"
           :alt="lapor.headline"
+          class="card-img"
           @error="$event.target.src = 'https://placehold.co/600x400?text=Error+Loading'"
         />
         <div class="report-card-content">
@@ -79,7 +80,8 @@
         <div v-if="!isEditing">
           <div class="modal-content-grid">
             <img
-              :src="getImageUrl(laporan.image || lapor.foto)"
+              :src="getImageUrl(laporan.foto_lapor)"
+
               alt="Foto Kucing"
               class="modal-image"
             />
@@ -196,17 +198,17 @@ const laporan = ref({});
 // Sesuaikan port dengan backend Anda (biasanya 3000)
 const SERVER_URL = 'http://localhost:3000';
 
-// Fungsi helper untuk membuat URL gambar lengkap
 const getImageUrl = (filename) => {
-  // 1. Jika kosong, kembalikan gambar placeholder
+  // 1. Cek jika filename kosong/null/undefined
   if (!filename) return 'https://placehold.co/600x400?text=No+Image';
 
-  // 2. Jika filename sudah berupa URL lengkap (misal dari internet), pakai langsung
+  // 2. Cek jika filename sudah URL lengkap (misal: https://imgur.com/...)
   if (filename.startsWith('http')) return filename;
 
-  // 3. Jika filename lokal, gabungkan dengan URL Static Backend
-  // Sesuai settingan server.js: prefix '/public/' mengarah ke folder public backend
-  return `${SERVER_URL}/public/image/adopsi/${filename}`;
+  // 3. Gabungkan dengan endpoint static backend
+  // Backend (server.js) melayani folder 'public' di prefix '/public/'
+  // Contoh hasil: http://localhost:3000/public/image/laporan/lapor-12345.jpg
+  return `${SERVER_URL}/public/image/laporan/${filename}`;
 };
 
 // --- FETCH DATA ---
@@ -252,39 +254,72 @@ function setLocation(data) {
   laporan.value.lokasi = data.alamat;
 }
 
+
 async function saveEdit() {
-  try {
-    if (laporan.value.id) {
-      await api.put(`/lapor/${laporan.value.id}`, laporan.value);
-      alert("Perubahan berhasil disimpan!");
-    } else {
-       await api.post('/lapor', laporan.value);
-       alert("Laporan berhasil dibuat!");
+    // KODE INI PERLU DIPERHATIKAN:
+    // Jika Anda ingin mengupload file saat EDIT, Anda tidak bisa mengirim JSON (laporan.value).
+    // Anda harus menggunakan FormData seperti saat Create.
+    // Jika hanya edit teks, JSON tidak masalah (karena controller saya update logicnya menangani 'parts.foto' undefined).
+
+    // Namun untuk konsistensi, sebaiknya gunakan logic FormData di sini jika form edit Anda support file upload.
+    try {
+        if (laporan.value.id) {
+            // Logic Update
+            await api.put(`/lapor/${laporan.value.id}`, laporan.value);
+            alert("Perubahan berhasil disimpan!");
+        } else {
+            // Logic Create (Ini biasanya sudah pakai FormData di file original Anda)
+            // Pastikan komponen ini mengirim data yang benar.
+             await api.post('/lapor', laporan.value);
+             alert("Laporan berhasil dibuat!");
+        }
+        isModalOpen.value = false;
+        fetchLaporan();
+    } catch (error) {
+        console.error("Gagal menyimpan:", error);
+        alert("Gagal menyimpan perubahan.");
     }
-    isModalOpen.value = false;
-    fetchLaporan();
-  } catch (error) {
-    console.error("Gagal menyimpan:", error);
-    alert("Gagal menyimpan perubahan.");
-  }
 }
 
 function closeModal() {
   isModalOpen.value = false;
 }
+// src/views/LaporView.vue (Di dalam script setup)
+// src/views/LaporView.vue
 
 async function deleteReport() {
-    if(confirm("Hapus laporan ini?")) {
-        try {
-            // Pastikan menggunakan ID yang benar (item.id)
-            await api.delete(`/lapor/${laporan.value.id}`);
-            alert("Berhasil dihapus");
-            closeModal(); // Tutup modal setelah hapus
-            fetchLaporan();
-        // eslint-disable-next-line no-unused-vars
-        } catch (e) {
-            alert("Gagal menghapus");
-        }
+    // 1. Cek ID
+    if (!laporan.value || !laporan.value.id) {
+        alert("Error Internal: ID Laporan tidak terbaca (undefined).");
+        return;
+    }
+
+    // 2. Konfirmasi
+    if (!confirm(`Yakin ingin menghapus laporan "${laporan.value.headline}"?`)) {
+        return;
+    }
+
+    try {
+        // 3. Request Delete
+        await api.delete(`/lapor/${laporan.value.id}`);
+
+        alert("Berhasil: Data telah dihapus.");
+        closeModal();
+        fetchLaporan(); // Refresh data
+
+    } catch (error) {
+        console.error("Detail Error Delete:", error);
+
+        // 4. Deteksi Pesan Error (Lebih Lengkap)
+        // Cek 'msg' (custom kita), 'message' (default Fastify), atau error browser
+        const serverMsg = error.response?.data?.msg;
+        const serverMessage = error.response?.data?.message;
+        const networkError = error.message;
+
+        // Tampilkan pesan yang ketemu
+        const finalMessage = serverMsg || serverMessage || networkError || "Gagal menghapus (Unknown Error)";
+
+        alert(`Gagal Hapus: ${finalMessage}`);
     }
 }
 </script>

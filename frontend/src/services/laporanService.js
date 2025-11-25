@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/api/laporan'
+// PERBAIKAN: Ubah akhiran '/laporan' menjadi '/lapor' sesuai routes di backend
+const API_URL = 'http://localhost:3000/api/lapor'
 
 export default {
   getAll() {
@@ -10,10 +11,15 @@ export default {
     return axios.get(`${API_URL}/${id}`)
   },
   create(data) {
-    return axios.post(API_URL, data)
+    // Pastikan header multipart ada
+    return axios.post(API_URL, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
   },
   update(id, data) {
-    return axios.put(`${API_URL}/${id}`, data)
+    return axios.put(`${API_URL}/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
   },
   delete(id) {
     return axios.delete(`${API_URL}/${id}`)

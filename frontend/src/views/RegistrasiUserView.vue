@@ -140,8 +140,9 @@ async function handleRegister() {
   isLoading.value = true;
 
   try {
+    // Kita gunakan email sebagai username default jika user tidak menginput username terpisah
     await api.post("/auth/signup", {
-      username: formData.value.email,  // backend pakai username, tapi kita email-kan
+      username: formData.value.email,
       email: formData.value.email,
       password: formData.value.password,
       phone: formData.value.phone,
@@ -149,11 +150,12 @@ async function handleRegister() {
     });
 
     alert("Registrasi berhasil! Silakan login");
-
     router.push("/login-user");
 
   } catch (error) {
-    alert(error.response?.data?.message || "Terjadi kesalahan");
+    // Menangkap pesan error dari backend
+    const msg = error.response?.data?.error || error.response?.data?.message || "Terjadi kesalahan";
+    alert(msg);
   }
 
   isLoading.value = false;

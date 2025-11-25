@@ -78,7 +78,7 @@ const isLoading = ref(false);
 function togglePassword() {
   showPassword.value = !showPassword.value;
 }
-
+// ... imports ...
 import api from "@/services/api";
 
 async function handleLogin() {
@@ -90,6 +90,8 @@ async function handleLogin() {
   isLoading.value = true;
 
   try {
+    // Endpoint tetap /auth/login
+    // Payload key 'username' diisi dengan email (sesuai logika backend yang menerima email OR username)
     const res = await api.post("/auth/login", {
       username: formData.value.email,
       password: formData.value.password
@@ -98,15 +100,21 @@ async function handleLogin() {
     // Simpan token
     localStorage.setItem("token", res.data.token);
 
-    // Simpan user jika diperlukan
+    // Simpan user object (sekarang berisi id_user, nama, role, dll)
     localStorage.setItem("user", JSON.stringify(res.data.user));
 
     alert("Login berhasil!");
 
-    router.push("/home");
+    // Cek Role untuk redirect (Opsional, jika admin punya halaman beda)
+    if(res.data.user.role === 'Admin') {
+        router.push("/admin/dashboard");
+    } else {
+        router.push("/home");
+    }
 
   } catch (error) {
-    alert(error.response?.data?.message || "Login gagal");
+    const msg = error.response?.data?.error || error.response?.data?.message || "Login gagal";
+    alert(msg);
   }
 
   isLoading.value = false;

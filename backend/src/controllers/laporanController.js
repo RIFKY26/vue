@@ -1,156 +1,167 @@
+// src/controllers/laporanController.js
 import * as LaporanModel from "../models/laporanModel.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// --- 1. SETUP PATH FOLDER ---
-// Karena menggunakan ES Modules, kita perlu mendefinisikan __dirname secara manual
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Tentukan lokasi folder penyimpanan gambar
-// Path ini naik 2 level dari 'src/controllers' ke root, lalu masuk ke 'public/image/adopsi'
-const UPLOAD_DIR = path.join(__dirname, "../../public/image/adopsi");
+// Path Upload
+const UPLOAD_DIR = path.join(__dirname, "../../public/image/laporan");
 
-// Pastikan folder upload ada, jika tidak, buat foldernya
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+// Helper Value
+const getValue = (field) => {
+  if (!field) return null;
+  return field.value !== undefined ? field.value : field;
+};
 
-// --- 2. READ (GET) ---
+// ... (GET & CREATE biarkan sama) ...
 export const getLaporan = async (req, reply) => {
   try {
     const data = await LaporanModel.getAllLaporan();
-
-    // Format data agar sesuai dengan Frontend
     const formattedData = data.map((item) => ({
       ...item,
-      // Frontend mengharapkan properti 'image'
-      // Kita ambil dari kolom 'foto' di database
-      image: item.foto || "default-cat.png",
-
-      // Placeholder jika timeAgo belum dihitung dari DB
-      timeAgo: item.created_at
-        ? new Date(item.created_at).toLocaleDateString()
-        : "Baru saja",
+      foto_lapor: item.image || item.foto_lapor || null, // Handle alias
+      timeAgo: "Baru saja",
     }));
-
     return reply.send(formattedData);
   } catch (error) {
-    console.error("Error [getLaporan]:", error);
-    return reply.status(500).send({ msg: "Gagal mengambil data laporan" });
+    console.error(error);
+    return reply.status(500).send({ msg: "Gagal mengambil data" });
   }
 };
 
-// --- 3. CREATE (POST) ---
 export const createLaporan = async (req, reply) => {
   try {
-    // Data dari FormData (Multipart) ada di req.body
     const parts = req.body;
+    if (!parts.foto) return reply.status(400).send({ msg: "Foto wajib!" });
 
-    // Validasi sederhana
-    if (!parts) {
-      return reply.status(400).send({ msg: "Tidak ada data yang dikirim" });
-    }
+    const buffer = await parts.foto.toBuffer();
+    const ext = path.extname(parts.foto.filename);
+    const newFileName = `lapor-${Date.now()}${ext}`;
+    fs.writeFileSync(path.join(UPLOAD_DIR, newFileName), buffer);
 
-    // A. EKSTRAKSI DATA TEKS
-    // Karena fastify-multipart dengan opsi 'attachFieldsToBody: true',
-    // setiap field teks dibungkus object { value: 'isi', ... }
-    const headline = parts.headline?.value;
-    const lokasi = parts.lokasi?.value;
-    const deskripsi = parts.deskripsi?.value;
-    const usia = parts.usia?.value || "Tidak diketahui";
+    const laporanData = {
+      headline: getValue(parts.headline),
+      lokasi: getValue(parts.lokasi),
+      deskripsi: getValue(parts.deskripsi),
+      usia: parseInt(getValue(parts.usia)) || 0,
+      jenis_kucing: parseInt(getValue(parts.id_jenis_kucing) || 1),
+      jenis_kelamin: parseInt(getValue(parts.id_jenis_kelamin) || 1),
+      kondisi_kucing: parseInt(getValue(parts.id_kondisi_kucing) || 1),
+      foto_lapor: newFileName,
+      id_adopter: 1,
+    };
 
-    // Convert String ID ke Integer (Default 1 jika kosong)
-    const id_jenis_kucing = parseInt(parts.id_jenis_kucing?.value || 1);
-    const id_jenis_kelamin = parseInt(parts.id_jenis_kelamin?.value || 1);
-    const id_kondisi_kucing = parseInt(parts.id_kondisi_kucing?.value || 1);
-
-    // B. HANDLE UPLOAD GAMBAR
-    let namaFileFoto = "default-cat.png"; // Default jika user tidak upload
-
-    if (parts.foto && parts.foto.filename) {
-      // 1. Ambil buffer (data mentah) file
-      const fileBuffer = await parts.foto.toBuffer();
-
-      // 2. Buat nama file unik (timestamp + ekstensi asli)
-      const ext = path.extname(parts.foto.filename);
-      const timestamp = Date.now();
-      namaFileFoto = `lapor-${timestamp}${ext}`; // Contoh: lapor-1732245.jpg
-
-      // 3. Simpan file ke folder public
-      const fullPath = path.join(UPLOAD_DIR, namaFileFoto);
-      fs.writeFileSync(fullPath, fileBuffer);
-
-      console.log(`File berhasil disimpan di: ${fullPath}`);
-    }
-
-    // C. SIMPAN KE DATABASE
-    const newId = await LaporanModel.createLaporanBaru({
-      headline,
-      lokasi,
-      deskripsi,
-      id_jenis_kucing,
-      id_jenis_kelamin,
-      id_kondisi_kucing,
-      usia,
-      foto: namaFileFoto, // Kita simpan nama filenya saja
-    });
-
-    return reply.status(201).send({
-      msg: "Laporan berhasil dibuat",
-      id: newId,
-      image: namaFileFoto,
-    });
+    const newId = await LaporanModel.createLaporanBaru(laporanData);
+    return reply.status(201).send({ msg: "Berhasil", id: newId });
   } catch (error) {
-    console.error("Error [createLaporan]:", error);
-    return reply.status(500).send({
-      msg: "Gagal membuat laporan",
-      error: error.message,
-    });
+    console.error(error);
+    return reply.status(500).send({ msg: "Gagal membuat laporan" });
   }
 };
 
-// --- 4. UPDATE (PUT) ---
+// === UPDATE (Fixed) ===
 export const updateLaporan = async (req, reply) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
+    const parts = req.body;
+    const oldData = await LaporanModel.getLaporanById(id);
 
-    // Catatan: Jika edit juga mengizinkan ganti foto,
-    // logikanya harus mirip createLaporan (cek multipart).
-    // Kode di bawah ini asumsi edit hanya TEXT (JSON).
+    if (!oldData) {
+      return reply.status(404).send({ msg: "Laporan tidak ditemukan" });
+    }
 
-    const { headline, deskripsi, lokasi, kondisi, gender, ras } = req.body;
+    let namaFileFoto = null;
 
-    // Panggil Model Update
-    await LaporanModel.updateLaporan(id, {
-      headline,
-      deskripsi,
-      lokasi,
-      // Tambahkan update field lain ke tabel kucing jika perlu
-    });
+    // Cek jika user mengupload file baru
+    // Note: parts.foto akan undefined jika user tidak memilih file baru di frontend
+    if (parts.foto) {
+      const buffer = await parts.foto.toBuffer();
+      const ext = path.extname(parts.foto.filename);
+      namaFileFoto = `lapor-${Date.now()}${ext}`;
 
+      // Simpan yang baru
+      fs.writeFileSync(path.join(UPLOAD_DIR, namaFileFoto), buffer);
+
+      // Hapus yang lama
+      if (oldData.foto_lapor && oldData.foto_lapor !== "default-cat.png") {
+        const oldPath = path.join(UPLOAD_DIR, oldData.foto_lapor);
+        if (fs.existsSync(oldPath)) {
+          try {
+            fs.unlinkSync(oldPath);
+          } catch (e) {}
+        }
+      }
+    }
+
+    const updateData = {
+      headline: getValue(parts.headline),
+      lokasi: getValue(parts.lokasi),
+      deskripsi: getValue(parts.deskripsi),
+      usia: parseInt(getValue(parts.usia)) || 0,
+      // Gunakan || oldData.field untuk fallback jika frontend mengirim null
+      jenis_kucing:
+        parseInt(getValue(parts.id_jenis_kucing)) || oldData.jenis_kucing,
+      jenis_kelamin:
+        parseInt(getValue(parts.id_jenis_kelamin)) || oldData.jenis_kelamin,
+      kondisi_kucing:
+        parseInt(getValue(parts.id_kondisi_kucing)) || oldData.kondisi_kucing,
+      foto_lapor: namaFileFoto, // null jika tidak ganti foto
+    };
+
+    await LaporanModel.updateLaporanData(id, updateData);
     return reply.send({ msg: "Laporan berhasil diupdate" });
   } catch (error) {
-    console.error("Error [updateLaporan]:", error);
+    console.error("Error Update:", error);
     return reply.status(500).send({ msg: "Gagal update laporan" });
   }
 };
 
-// --- 5. DELETE (DELETE) ---
+// === DELETE (Fixed) ===
 export const deleteLaporan = async (req, reply) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
+    // 1. Cek apakah data ada
+    const oldData = await LaporanModel.getLaporanById(id);
+    if (!oldData) {
+      return reply.status(404).send({ msg: "Data tidak ditemukan" });
+    }
 
-    // Hapus data dari DB
-    await LaporanModel.deleteLaporan(id);
+    // 2. Hapus File Fisik (Gunakan Try-Catch agar error file tidak membatalkan hapus DB)
+    if (oldData.foto_lapor && oldData.foto_lapor !== "default-cat.png") {
+      const filePath = path.join(UPLOAD_DIR, oldData.foto_lapor);
+      // Cek dulu file ada atau tidak
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (err) {
+          console.error(
+            "Gagal hapus file fisik (lanjutkan hapus DB):",
+            err.message
+          );
+        }
+      }
+    }
 
-    // (Opsional) Disini bisa ditambahkan logika untuk menghapus file gambar fisik
-    // menggunakan fs.unlinkSync() jika ingin menghemat penyimpanan.
+    // 3. Hapus Data di Database
+    await LaporanModel.deleteLaporanData(id);
 
     return reply.send({ msg: "Laporan berhasil dihapus" });
   } catch (error) {
-    console.error("Error [deleteLaporan]:", error);
-    return reply.status(500).send({ msg: "Gagal menghapus laporan" });
+    console.error("Error Delete:", error);
+
+    // MENANGANI ERROR DATABASE (Foreign Key)
+    // Jika error karena data ini dipakai di tabel lain (misal: tabel adopsi/komentar)
+    if (error.code === "ER_ROW_IS_REFERENCED_2" || error.errno === 1451) {
+      return reply.status(400).send({
+        msg: "Gagal: Data ini tidak bisa dihapus karena sedang digunakan di data lain (misal: Data Adopsi).",
+      });
+    }
+
+    return reply
+      .status(500)
+      .send({ msg: error.message || "Gagal menghapus laporan" });
   }
 };

@@ -1,4 +1,3 @@
-// src/routes/laporanRoutes.js
 import {
   getLaporan,
   createLaporan,
@@ -7,16 +6,16 @@ import {
 } from "../controllers/laporanController.js";
 
 async function laporanRoutes(fastify, options) {
-  // GET semua laporan
+  // GET
   fastify.get("/lapor", getLaporan);
 
-  // POST laporan baru
+  // POST (Multipart ditangani di controller karena setting global attachFieldsToBody: true)
   fastify.post("/lapor", createLaporan);
 
-  // PUT update laporan (jika fitur edit diaktifkan)
+  // PUT
   fastify.put("/lapor/:id", updateLaporan);
 
-  // DELETE hapus laporan
+  // DELETE
   fastify.delete("/lapor/:id", deleteLaporan);
 }
 

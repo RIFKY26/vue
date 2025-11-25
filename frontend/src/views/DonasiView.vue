@@ -10,9 +10,21 @@
       <input type="text" v-model="searchQuery" placeholder="Cari program donasi...">
     </div>
 
+     <div v-if="loading" style="text-align:center; padding: 40px;">
+      <p>Memuat program donasi...</p>
+    </div>
+
+    <div v-else-if="filteredDonationData.length === 0" style="text-align:center; padding: 40px;">
+      <p>Belum ada program donasi tersedia.</p>
+    </div>
+
     <div class="donation-grid">
       <div v-for="program in filteredDonationData" :key="program.id" class="donation-card">
-        <img :src="program.image" :alt="program.title">
+        <img
+          :src="getImageUrl(program.image)"
+          @error="$event.target.src = 'https://placehold.co/600x400?text=No+Image'"
+          :alt="program.title"
+        >
         <div class="donation-card-body">
           <h3>{{ program.title }}</h3>
           <div class="shelter-info">
@@ -25,118 +37,106 @@
               </span>
             </div>
           </div>
-          <p>{{ program.description }}</p>
+          <p>{{ truncateText(program.description, 100) }}</p>
 
           <div class="donation-progress">
             <div class="progress-text">
-              <span>Terkumpul <strong>{{ program.terkumpulFormatted }}</strong> dari <strong>{{ program.targetFormatted }}</strong></span>
+              <span>Terkumpul <strong>{{ formatRupiah(program.terkumpul) }}</strong> dari <strong>{{ formatRupiah(program.target) }}</strong></span>
             </div>
             <div class="progress-bar">
-              <div class="progress-bar-fill" :style="{ width: program.progress + '%' }"></div>
+              <div class="progress-bar-fill" :style="{ width: calculateProgress(program) + '%' }"></div>
             </div>
           </div>
 
-          <RouterLink :to="'/donasi/' + program.id" class="btn-donate">Berdonasi</RouterLink>
+          <button class="btn-donate" @click="goToDetail(program.id)">Berdonasi</button>
         </div>
       </div>
     </div>
   </main>
 </template>
 
+
 <script setup>
-import { ref, computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import DonasiService from '@/services/donasiService';
 
-// Search query
-const searchQuery = ref('')
+const router = useRouter();
+const donations = ref([]);
+const searchQuery = ref('');
+const loading = ref(true);
+const SERVER_URL = 'http://localhost:3000'; // Sesuaikan port
 
-// Fungsi bantuan untuk format Rupiah
-const formatRupiah = (number) => {
-  return 'Rp. ' + new Intl.NumberFormat('id-ID').format(number);
+// === FETCH DATA ===
+const buildShelterAvatar = (filename) => {
+  if (!filename) {
+    return 'https://placehold.co/50x50?text=S'
+  }
+  return `${SERVER_URL}/public/image/shelter/${filename}`
+}
+
+const fetchDonasi = async () => {
+  loading.value = true;
+  try {
+    const response = await DonasiService.getAll();
+    const rawData = Array.isArray(response.data) ? response.data : (response.data.data || []);
+
+    donations.value = rawData.map(item => ({
+      id: item.id_donasi,
+      title: item.judul,
+      description: item.deskripsi,
+      image: item.foto,
+      terkumpul: Number(item.terkumpul || 0),
+      target: Number(item.target_donasi || 0),
+      shelter: {
+        name: item.shelter?.name || 'AdoptMeow Official',
+        location: item.shelter?.location || 'Indonesia',
+        avatar: buildShelterAvatar(item.shelter?.avatar)
+      }
+    }));
+
+  } catch (error) {
+    console.error("Gagal load donasi:", error);
+  } finally {
+    loading.value = false;
+  }
 };
 
-// --- DATA HARDCODE (SEKARANG ADA 4 ITEM) ---
-const rawDonationData = ref([
-  {
-    id: 'pakan-kucing',
-    title: "Bantu Pakan Kucing Jalanan",
-    image: "/image/donasi/Rectangle 23853 (1).png", 
-    shelter: { 
-      name: "Rumah Kucing BDG", 
-      location: "Bandung", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Masih banyak kucing jalanan yang kelaparan... Selengkapnya...",
-    terkumpul: 1250000, 
-    target: 5000000,
-  },
-  {
-    id: 'rawat-kucing',
-    title: "Rawat Kucing Sakit Terlantar",
-    image: "/image/donasi/Rectangle 23853.png",
-    shelter: { 
-      name: "Meow Shelter", 
-      location: "Jakarta", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Banyak kucing sakit yang kami temukan... Selengkapnya...",
-    terkumpul: 4800000,
-    target: 5000000,
-  },
-  // ===== ITEM BARU 1 =====
-  {
-    id: 'sterilisasi-liar',
-    title: "Program Sterilisasi Kucing Liar",
-    image: "/image/donasi/Rectangle 23853 (1).png", // Ganti dengan gambar baru nanti
-    shelter: { 
-      name: "Cat Haven", 
-      location: "Surabaya", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Bantu kami menekan populasi kucing jalanan dengan manusiawi.",
-    terkumpul: 7500000,
-    target: 10000000,
-  },
-  // ===== ITEM BARU 2 =====
-  {
-    id: 'shelter-baru',
-    title: "Bangun Shelter Baru yang Layak",
-    image: "/image/donasi/Rectangle 23853.png", // Ganti dengan gambar baru nanti
-    shelter: { 
-      name: "Paw Friends", 
-      location: "Yogyakarta", 
-      avatar: "/image/donasi/image.png" 
-    },
-    description: "Shelter kami sudah over-kapasitas. Bantu kami rumah baru.",
-    terkumpul: 2100000,
-    target: 15000000,
-  }
-]);
-
-// Computed property untuk menghitung persentase dan format uang
-const donationData = computed(() => {
-  return rawDonationData.value.map(program => ({
-    ...program,
-    progress: (program.terkumpul / program.target) * 100,
-    terkumpulFormatted: formatRupiah(program.terkumpul),
-    targetFormatted: formatRupiah(program.target)
-  }));
+onMounted(() => {
+  fetchDonasi();
 });
 
-// Computed property untuk filter berdasarkan search query
+// === COMPUTED & HELPERS ===
 const filteredDonationData = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return donationData.value;
-  }
-  
-  const query = searchQuery.value.toLowerCase().trim();
-  return donationData.value.filter(program => 
-    program.title.toLowerCase().includes(query) ||
-    program.shelter.name.toLowerCase().includes(query) ||
-    program.shelter.location.toLowerCase().includes(query) ||
-    program.description.toLowerCase().includes(query)
+  if (!searchQuery.value.trim()) return donations.value;
+  return donations.value.filter(d =>
+    d.title.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+
+const getImageUrl = (filename) => {
+  if (!filename || filename === 'default-donasi.png') return 'https://placehold.co/600x400?text=No+Image';
+  return `${SERVER_URL}/public/image/donasi/${filename}`;
+};
+
+const formatRupiah = (angka) => {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+};
+
+const calculateProgress = (program) => {
+  if (!program.target) return 0;
+  const p = (program.terkumpul / program.target) * 100;
+  return p > 100 ? 100 : p;
+};
+
+const truncateText = (text, length) => {
+  if(!text) return '';
+  return text.length > length ? text.substring(0, length) + '...' : text;
+};
+
+const goToDetail = (id) => {
+  router.push(`/donasi/${id}`);
+};
 </script>
 
 <style scoped>
