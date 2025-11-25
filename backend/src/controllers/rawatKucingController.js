@@ -1,7 +1,7 @@
 import RawatKucingModel from "../models/RawatKucingModel.js";
 
-export async function getListKucing(fastify) {
-  return await RawatKucingModel.getAllKucing(fastify.mysql);
+export async function getListKucing(fastify, idUser) {
+  return await RawatKucingModel.getAllKucing(fastify.mysql, idUser);
 }
 
 export async function getKucingReminders(fastify, id) {

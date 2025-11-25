@@ -170,7 +170,10 @@ const allCatsData = ref([])
 
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/rawat/kucing")
+   const userId = localStorage.getItem("user_id") || 1;
+const res = await axios.get(`http://localhost:3000/api/rawat/kucing?id_user=${userId}`);
+
+
     const cats = res.data
 
     for (const cat of cats) {
@@ -193,7 +196,10 @@ onMounted(async () => {
       age: c.usia,
 
       // FOTO SESUAI DB
-      image: `http://localhost:3000/image/${c.foto}`,
+      // image: `http://localhost:3000/image/${c.foto}`,
+   image: new URL("../assets/images/kucing.svg", import.meta.url).href,
+
+
 
       reminders: c.reminders,
       activities: c.activities

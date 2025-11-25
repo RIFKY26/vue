@@ -6,10 +6,12 @@ import {
 
 export default async function rawatKucingRoutes(fastify, options) {
 
-  // GET list kucing
-  fastify.get("/rawat/kucing", async () => {
-    return await getListKucing(fastify);
-  });
+  // GET list kucing sesuai user login
+fastify.get("/rawat/kucing", async (req) => {
+  const idUser = req.query.id_user || 1;
+  return await getListKucing(fastify, idUser);
+});
+
 
   // GET reminders per kucing
   fastify.get("/rawat/kucing/:id/reminders", async (req) => {
